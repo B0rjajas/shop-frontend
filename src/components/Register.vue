@@ -24,6 +24,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
+import { API_URL } from '../config';
 
 const username = ref('');
 const email = ref('');
@@ -35,7 +36,7 @@ const userStore = useUserStore();
 
 const handleRegister = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/users/register', {
+    const response = await fetch(`${API_URL}/api/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

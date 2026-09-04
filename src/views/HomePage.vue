@@ -10,7 +10,7 @@
       <button @click="doSearch">Buscar</button>
     </div>
 
-    <!-- 🆕 Carrusel de banners (solo si hay) -->
+    <!-- Carrusel de banners -->
     <el-carousel
       v-if="banners.length"
       height="300px"
@@ -19,7 +19,7 @@
       <el-carousel-item v-for="banner in banners" :key="banner.id">
         <router-link :to="banner.uri || '#'">
           <img
-            :src="'http://localhost:3000' + banner.cover"
+            :src="API_URL + banner.cover"
             alt="banner"
             style="width:100%; height:300px; object-fit:cover;"
           />
@@ -68,7 +68,7 @@
       >
         <img
           v-if="product.image"
-          :src="'http://localhost:3000' + product.image"
+          :src="API_URL + product.image"
           alt="product image"
         />
         <h3>{{ product.name }}</h3>
@@ -95,15 +95,12 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useOperationalStore } from '../stores/operational';
+import { API_URL } from '../config';
 
-// --- Stores y router ---
 const router = useRouter();
 const operationalStore = useOperationalStore();
 
-// --- Estado de banners ---
 const banners = ref<any[]>([]);
-
-// --- Estado de productos y categorías ---
 const categories = ref<any[]>([]);
 const products = ref<any[]>([]);
 const selectedCategory = ref<number | null>(null);
@@ -112,8 +109,6 @@ const limit = 10;
 const loading = ref(false);
 const hasMore = ref(true);
 const error = ref('');
-
-// --- Búsqueda ---
 const searchQuery = ref('');
 
 const doSearch = () => {
@@ -122,10 +117,9 @@ const doSearch = () => {
   }
 };
 
-// --- Cargar categorías ---
 const fetchCategories = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/products/categories');
+    const res = await axios.get(`${API_URL}/api/products/categories`);
     categories.value = res.data;
   } catch (err) {
     console.error('Error al cargar categorías:', err);
@@ -133,7 +127,6 @@ const fetchCategories = async () => {
   }
 };
 
-// --- Cargar productos ---
 const fetchProducts = async (reset = true) => {
   if (reset) {
     offset.value = 0;
@@ -153,7 +146,7 @@ const fetchProducts = async (reset = true) => {
       params.categoryId = selectedCategory.value;
     }
 
-    const res = await axios.get('http://localhost:3000/api/products/products', { params });
+    const res = await axios.get(`${API_URL}/api/products/products`, { params });
     const newProducts = res.data.products || [];
 
     if (reset) {
@@ -174,36 +167,29 @@ const fetchProducts = async (reset = true) => {
   }
 };
 
-// --- Cambiar categoría ---
 const selectCategory = (catId: number | null) => {
   selectedCategory.value = catId;
   fetchProducts(true);
 };
 
-// --- Cargar más productos ---
 const loadMore = () => {
   fetchProducts(false);
 };
 
-// --- Ir al detalle del producto ---
 const goToDetail = (id: number) => {
   router.push(`/product/${id}`);
 };
 
-// --- Cargar banners activos ---
 const loadBanners = async () => {
   try {
     await operationalStore.fetchBanners();
-    // Solo mostrar banners con status = 1 (activo)
     banners.value = operationalStore.banners.filter(b => b.status === 1);
   } catch (error) {
     console.error('Error al cargar banners:', error);
   }
 };
 
-// --- Inicializar todo al montar el componente ---
 onMounted(async () => {
-  // Cargar banners, categorías y productos en paralelo
   await Promise.all([
     loadBanners(),
     fetchCategories(),
@@ -213,9 +199,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* (tus estilos existentes) */
 .home { padding: 20px; max-width: 1200px; margin: 0 auto; }
-
 .search-bar {
   display: flex;
   gap: 10px;
@@ -235,7 +219,6 @@ onMounted(async () => {
   border-radius: 4px;
   cursor: pointer;
 }
-
 .categories {
   display: flex;
   gap: 10px;
@@ -254,7 +237,6 @@ onMounted(async () => {
   color: white;
   border-color: #42b883;
 }
-
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -275,13 +257,8 @@ onMounted(async () => {
   height: 150px;
   object-fit: cover;
 }
-.discount {
-  color: red;
-}
-.load-more {
-  text-align: center;
-  margin-top: 20px;
-}
+.discount { color: red; }
+.load-more { text-align: center; margin-top: 20px; }
 .load-more button {
   padding: 10px 30px;
   background: #42b883;
@@ -295,10 +272,7 @@ onMounted(async () => {
   padding: 40px;
   color: #888;
 }
-.error {
-  color: red;
-}
-
+.error { color: red; }
 .banner-content {
   position: absolute;
   bottom: 20px;
@@ -308,5 +282,4 @@ onMounted(async () => {
   padding: 10px 20px;
   border-radius: 8px;
 }
-
 </style>

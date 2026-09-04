@@ -36,6 +36,7 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useOperationalStore } from '../stores/operational';
+import { API_URL } from '../config';
 
 const router = useRouter();
 const store = useOperationalStore();
@@ -117,10 +118,6 @@ button[type="button"] {
   background: #ccc;
   color: #333;
 }
-.success {
-  color: green;
-}
-.error {
-  color: red;
-}
+.success { color: green; }
+.error { color: red; }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="product-detail" v-if="product">
     <div class="top">
-      <img v-if="product.image" :src="'http://localhost:3000' + product.image" alt="product" class="main-image" />
+      <img v-if="product.image" :src="API_URL + product.image" alt="product" class="main-image" />
       <div class="info">
         <h1>{{ product.name }}</h1>
         <p><strong>Marca:</strong> {{ product.brand }}</p>
@@ -39,6 +39,7 @@ import axios from 'axios';
 import { useCartStore } from '../stores/cart';
 import { useEvaluationStore } from '../stores/evaluation';
 import { ElMessage } from 'element-plus';
+import { API_URL } from '../config';
 
 const route = useRoute();
 const cartStore = useCartStore();
@@ -50,7 +51,7 @@ const evaluations = ref<any[]>([]);
 const fetchProduct = async () => {
   try {
     const id = route.params.id;
-    const res = await axios.get(`http://localhost:3000/api/products/products/${id}`);
+    const res = await axios.get(`${API_URL}/api/products/products/${id}`);
     product.value = res.data;
   } catch (error) {
     console.error('Error fetching product:', error);
@@ -60,7 +61,7 @@ const fetchProduct = async () => {
 const loadEvaluations = async () => {
   try {
     const productId = route.params.id;
-    await evalStore.fetchEvaluations({ gid: productId, state: 1, limit: 20 });
+    await evalStore.fetchEvaluations({ gid: Number(productId), state: 1, limit: 20 });
     evaluations.value = evalStore.evaluations;
   } catch (error) {
     console.error('Error loading evaluations:', error);

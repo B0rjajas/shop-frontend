@@ -18,7 +18,7 @@
           </span>
         </div>
         <div class="banner-body">
-          <img v-if="banner.cover" :src="'http://localhost:3000' + banner.cover" alt="cover" class="banner-image" />
+          <img v-if="banner.cover" :src="API_URL + banner.cover" alt="cover" class="banner-image" />
           <div class="banner-info">
             <p><strong>Contenido:</strong> {{ banner.content }}</p>
             <p><strong>URL:</strong> {{ banner.uri }}</p>
@@ -40,6 +40,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useOperationalStore } from '../stores/operational';
+import { API_URL } from '../config';
 
 const store = useOperationalStore();
 
@@ -60,17 +61,8 @@ const deleteBanner = (id: number) => {
 </script>
 
 <style scoped>
-.operational-list {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-}
-
+.operational-list { max-width: 900px; margin: 0 auto; padding: 20px; }
+h2 { color: #2c3e50; margin-bottom: 20px; }
 .btn-create {
   background: #42b883;
   color: white;
@@ -81,10 +73,7 @@ h2 {
   cursor: pointer;
   margin-bottom: 20px;
 }
-.btn-create:hover {
-  background: #33a06f;
-}
-
+.btn-create:hover { background: #33a06f; }
 .banner-card {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -93,36 +82,22 @@ h2 {
   background: #fafafa;
   transition: box-shadow 0.2s;
 }
-.banner-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
+.banner-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .banner-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
-.banner-header h3 {
-  margin: 0;
-  color: #2c3e50;
-}
-
+.banner-header h3 { margin: 0; color: #2c3e50; }
 .status-badge {
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: bold;
 }
-.status-badge.active {
-  background: #d4edda;
-  color: #155724;
-}
-.status-badge.inactive {
-  background: #f8d7da;
-  color: #721c24;
-}
-
+.status-badge.active { background: #d4edda; color: #155724; }
+.status-badge.inactive { background: #f8d7da; color: #721c24; }
 .banner-body {
   display: flex;
   gap: 20px;
@@ -134,21 +109,14 @@ h2 {
   object-fit: cover;
   border-radius: 4px;
 }
-.banner-info {
-  flex: 1;
-}
-.banner-info p {
-  margin: 5px 0;
-  color: #555;
-}
-
+.banner-info { flex: 1; }
+.banner-info p { margin: 5px 0; color: #555; }
 .banner-actions {
   display: flex;
   gap: 10px;
   margin-top: 12px;
   flex-wrap: wrap;
 }
-
 .btn-edit, .btn-status, .btn-delete {
   padding: 6px 14px;
   border: none;
@@ -157,28 +125,10 @@ h2 {
   cursor: pointer;
   transition: background 0.2s;
 }
-
-.btn-edit {
-  background: #5bc0de;
-  color: white;
-}
-.btn-edit:hover {
-  background: #46b8da;
-}
-
-.btn-status {
-  background: #f0ad4e;
-  color: white;
-}
-.btn-status:hover {
-  background: #ec971f;
-}
-
-.btn-delete {
-  background: #d9534f;
-  color: white;
-}
-.btn-delete:hover {
-  background: #c9302c;
-}
+.btn-edit { background: #5bc0de; color: white; }
+.btn-edit:hover { background: #46b8da; }
+.btn-status { background: #f0ad4e; color: white; }
+.btn-status:hover { background: #ec971f; }
+.btn-delete { background: #d9534f; color: white; }
+.btn-delete:hover { background: #c9302c; }
 </style>

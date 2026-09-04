@@ -38,7 +38,7 @@
         </el-form-item>
         <el-form-item label="Imagen principal">
           <input type="file" @change="handleImageUpload" accept="image/*" />
-          <img v-if="form.image" :src="'http://localhost:3000' + form.image" style="max-width: 150px; display: block; margin-top: 8px;" />
+          <img v-if="form.image" :src="form.image.startsWith('http') ? form.image : API_URL + form.image" style="max-width: 150px; display: block; margin-top: 8px;" />
         </el-form-item>
         <el-form-item label="Detalle (editor)">
           <div style="border: 1px solid #ccc; z-index: 100;">
@@ -73,6 +73,8 @@
   import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
   import { IDomEditor } from '@wangeditor/editor';
   import '@wangeditor/editor/dist/css/style.css';
+  import { API_URL } from '../config';
+
   
   const route = useRoute();
   const router = useRouter();
