@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUserStore } from './user';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [] as any[],
@@ -15,7 +17,7 @@ export const useCartStore = defineStore('cart', {
     async fetchCart() {
       this.loading = true;
       try {
-        const res = await axios.get('http://localhost:3000/api/shop/get', {
+        const res = await axios.get(`${API_URL}/api/shop/get`, {
           headers: this.getAuthHeaders(),
         });
         this.items = res.data.items || [];
@@ -28,7 +30,7 @@ export const useCartStore = defineStore('cart', {
     },
     async addToCart(productId: number, quantity: number = 1) {
       await axios.post(
-        'http://localhost:3000/api/shop/add',
+        `${API_URL}/api/shop/add`,
         { productId, quantity },
         { headers: this.getAuthHeaders() }
       );
@@ -36,30 +38,29 @@ export const useCartStore = defineStore('cart', {
     },
     async updateCart(items: any[]) {
       await axios.post(
-        'http://localhost:3000/api/shop/update',
+        `${API_URL}/api/shop/update`,
         { items },
         { headers: this.getAuthHeaders() }
       );
       await this.fetchCart();
     },
     async clearCart() {
-      await axios.delete('http://localhost:3000/api/shop/clear', {
+      await axios.delete(`${API_URL}/api/shop/clear`, {
         headers: this.getAuthHeaders(),
       });
       this.items = [];
     },
-    // ✅ MOVER AQUÍ (dentro de actions)
     async createCheckoutSession() {
       console.log('Creando sesión de pago...');
       const headers = this.getAuthHeaders();
       console.log('Token enviado a Stripe:', headers);
       try {
         const res = await axios.post(
-          'http://localhost:3000/api/stripe/create-checkout-session',
-          {}, // El backend obtiene el carrito del usuario autenticado
+          `${API_URL}/api/stripe/create-checkout-session`,
+          {},
           { headers: this.getAuthHeaders() }
         );
-        return res.data; // { sessionId, url }
+        return res.data;
       } catch (error) {
         console.error('Error al crear sesión de Stripe:', error);
         throw error;

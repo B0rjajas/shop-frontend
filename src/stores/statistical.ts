@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUserStore } from './user';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export const useStatisticalStore = defineStore('statistical', {
   state: () => ({
     userStats: { allCount: 0, datas: [] as any[] },
@@ -17,10 +19,10 @@ export const useStatisticalStore = defineStore('statistical', {
     },
     async fetchStats(type: string) {
       try {
-        const res = await axios.get('http://localhost:3000/api/statistical/get', {
-  params: { type },
-  headers: this.getAuthHeaders(),
-});
+        const res = await axios.get(`${API_URL}/api/statistical/get`, {
+          params: { type },
+          headers: this.getAuthHeaders(),
+        });
         return res.data;
       } catch (error) {
         console.error(`Error fetching ${type} stats:`, error);

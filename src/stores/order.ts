@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUserStore } from './user';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export const useOrderStore = defineStore('order', {
   state: () => ({
     orders: [] as any[],
@@ -16,8 +18,8 @@ export const useOrderStore = defineStore('order', {
     async fetchOrders(params: { offset?: number; limit?: number; filter?: number; order?: string; type?: number } = {}) {
       this.loading = true;
       try {
-        const res = await axios.get('http://localhost:3000/api/orders/list/get', {
-          params: { ...params, type: params.type ?? 1 }, // por defecto 1
+        const res = await axios.get(`${API_URL}/api/orders/list/get`, {
+          params: { ...params, type: params.type ?? 1 },
           headers: this.getAuthHeaders(),
         });
         this.orders = res.data.orders;
@@ -32,11 +34,10 @@ export const useOrderStore = defineStore('order', {
     async createOrder(address: string) {
       try {
         await axios.post(
-          'http://localhost:3000/api/orders/create',
+          `${API_URL}/api/orders/create`,
           { address },
           { headers: this.getAuthHeaders() }
         );
-        // ✅ Recargar pedidos DESPUÉS de crear (dentro del try)
         await this.fetchOrders({ filter: 0 });
       } catch (error) {
         console.error(error);
@@ -45,7 +46,7 @@ export const useOrderStore = defineStore('order', {
     },
     async updateOrderState(orderId: number, state: number) {
       await axios.post(
-        'http://localhost:3000/api/orders/update',
+        `${API_URL}/api/orders/update`,
         { orderId, state },
         { headers: this.getAuthHeaders() }
       );

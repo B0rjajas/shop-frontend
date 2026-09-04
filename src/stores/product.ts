@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUserStore } from './user';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export interface Category {
   id: number;
   name: string;
@@ -40,11 +42,10 @@ export const useProductStore = defineStore('product', {
       return { Authorization: `Bearer ${userStore.token}` };
     },
 
-    // ---- Categorías ----
     async fetchCategories() {
       this.loading = true;
       try {
-        const res = await axios.get('http://localhost:3000/api/products/categories', {
+        const res = await axios.get(`${API_URL}/api/products/categories`, {
           headers: this.getAuthHeaders(),
         });
         this.categories = res.data;
@@ -57,31 +58,30 @@ export const useProductStore = defineStore('product', {
     },
 
     async createCategory(data: { name: string; description: string; sort?: number }) {
-      await axios.post('http://localhost:3000/api/products/categories', data, {
+      await axios.post(`${API_URL}/api/products/categories`, data, {
         headers: this.getAuthHeaders(),
       });
       await this.fetchCategories();
     },
 
     async updateCategory(id: number, data: { name: string; description: string; sort?: number }) {
-      await axios.put(`http://localhost:3000/api/products/categories/${id}`, data, {
+      await axios.put(`${API_URL}/api/products/categories/${id}`, data, {
         headers: this.getAuthHeaders(),
       });
       await this.fetchCategories();
     },
 
     async deleteCategory(id: number) {
-      await axios.delete(`http://localhost:3000/api/products/categories/${id}`, {
+      await axios.delete(`${API_URL}/api/products/categories/${id}`, {
         headers: this.getAuthHeaders(),
       });
       await this.fetchCategories();
     },
 
-    // ---- Productos ----
     async fetchProducts(params: { categoryId?: number; offset?: number; limit?: number; keyword?: string } = {}) {
       this.loading = true;
       try {
-        const res = await axios.get('http://localhost:3000/api/products/products', {
+        const res = await axios.get(`${API_URL}/api/products/products`, {
           params,
           headers: this.getAuthHeaders(),
         });
@@ -98,7 +98,7 @@ export const useProductStore = defineStore('product', {
     async fetchProduct(id: number) {
       this.loading = true;
       try {
-        const res = await axios.get(`http://localhost:3000/api/products/products/${id}`, {
+        const res = await axios.get(`${API_URL}/api/products/products/${id}`, {
           headers: this.getAuthHeaders(),
         });
         this.currentProduct = res.data;
@@ -112,7 +112,7 @@ export const useProductStore = defineStore('product', {
     },
 
     async createProduct(data: FormData) {
-      await axios.post('http://localhost:3000/api/products/products', data, {
+      await axios.post(`${API_URL}/api/products/products`, data, {
         headers: {
           ...this.getAuthHeaders(),
           'Content-Type': 'multipart/form-data',
@@ -122,7 +122,7 @@ export const useProductStore = defineStore('product', {
     },
 
     async updateProduct(id: number, data: FormData) {
-      await axios.put(`http://localhost:3000/api/products/products/${id}`, data, {
+      await axios.put(`${API_URL}/api/products/products/${id}`, data, {
         headers: {
           ...this.getAuthHeaders(),
           'Content-Type': 'multipart/form-data',
@@ -132,7 +132,7 @@ export const useProductStore = defineStore('product', {
     },
 
     async deleteProduct(id: number) {
-      await axios.delete(`http://localhost:3000/api/products/products/${id}`, {
+      await axios.delete(`${API_URL}/api/products/products/${id}`, {
         headers: this.getAuthHeaders(),
       });
       await this.fetchProducts();

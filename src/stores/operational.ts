@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUserStore } from './user';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export interface Banner {
   id: number;
   name: string;
@@ -29,7 +31,7 @@ export const useOperationalStore = defineStore('operational', {
     async fetchBanners() {
       this.loading = true;
       try {
-        const res = await axios.get('http://localhost:3000/api/operational', {
+        const res = await axios.get(`${API_URL}/api/operational`, {
           headers: this.getAuthHeaders(),
         });
         this.banners = res.data;
@@ -44,7 +46,7 @@ export const useOperationalStore = defineStore('operational', {
     async fetchOne(id: number) {
       this.loading = true;
       try {
-        const res = await axios.get(`http://localhost:3000/api/operational/${id}`, {
+        const res = await axios.get(`${API_URL}/api/operational/${id}`, {
           headers: this.getAuthHeaders(),
         });
         this.currentBanner = res.data;
@@ -57,16 +59,15 @@ export const useOperationalStore = defineStore('operational', {
       }
     },
 
-    // Crear banner con FormData (para incluir imagen)
     async createBanner(formData: FormData) {
       try {
-        const res = await axios.post('http://localhost:3000/api/operational', formData, {
+        const res = await axios.post(`${API_URL}/api/operational`, formData, {
           headers: {
             ...this.getAuthHeaders(),
             'Content-Type': 'multipart/form-data',
           },
         });
-        await this.fetchBanners(); // Recargar lista
+        await this.fetchBanners();
         return res.data;
       } catch (error) {
         console.error('Error creating banner:', error);
@@ -74,10 +75,9 @@ export const useOperationalStore = defineStore('operational', {
       }
     },
 
-    // Actualizar banner completo con FormData
     async updateBanner(id: number, formData: FormData) {
       try {
-        const res = await axios.put(`http://localhost:3000/api/operational/${id}`, formData, {
+        const res = await axios.put(`${API_URL}/api/operational/${id}`, formData, {
           headers: {
             ...this.getAuthHeaders(),
             'Content-Type': 'multipart/form-data',
@@ -93,7 +93,7 @@ export const useOperationalStore = defineStore('operational', {
 
     async updateStatus(id: number, status: number) {
       try {
-        await axios.put(`http://localhost:3000/api/operational/${id}/status`, { status }, {
+        await axios.put(`${API_URL}/api/operational/${id}/status`, { status }, {
           headers: this.getAuthHeaders(),
         });
         await this.fetchBanners();
@@ -105,7 +105,7 @@ export const useOperationalStore = defineStore('operational', {
 
     async deleteBanner(id: number) {
       try {
-        await axios.delete(`http://localhost:3000/api/operational/${id}`, {
+        await axios.delete(`${API_URL}/api/operational/${id}`, {
           headers: this.getAuthHeaders(),
         });
         await this.fetchBanners();
