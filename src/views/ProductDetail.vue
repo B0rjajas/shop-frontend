@@ -39,7 +39,7 @@ import axios from 'axios';
 import { useCartStore } from '../stores/cart';
 import { useEvaluationStore } from '../stores/evaluation';
 import { ElMessage } from 'element-plus';
-import { API_URL } from '@config';
+import { API_URL } from '@/config';
 
 const route = useRoute();
 const cartStore = useCartStore();

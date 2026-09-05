@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
-import { API_URL } from '../config';
+import { API_URL } from '@/config';
 
 const username = ref('');
 const password = ref('');

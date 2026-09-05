@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useOperationalStore } from '../stores/operational';
-import { API_URL } from '../config';
+import { API_URL } from '@/config';
 
 const store = useOperationalStore();
 
