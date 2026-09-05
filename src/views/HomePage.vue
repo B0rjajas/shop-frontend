@@ -95,7 +95,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useOperationalStore } from '../stores/operational';
-import { API_URL } from '@config';
+import { API_URL } from '@/config';
 
 const router = useRouter();
 const operationalStore = useOperationalStore();
