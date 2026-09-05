@@ -38,7 +38,7 @@
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useOperationalStore } from '../stores/operational';
-import { API_URL } from '../config';
+import { API_URL } from '@config';
 
 const router = useRouter();
 const route = useRoute();

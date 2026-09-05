@@ -73,7 +73,7 @@
   import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
   import { IDomEditor } from '@wangeditor/editor';
   import '@wangeditor/editor/dist/css/style.css';
-  import { API_URL } from '../config';
+  import { API_URL } from '@config';
 
   
   const route = useRoute();
