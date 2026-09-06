@@ -17,6 +17,12 @@
       <div>
         <label>Imagen (cover)</label>
         <input type="file" @change="handleFileUpload" />
+        <img 
+          v-if="previewImage" 
+          :src="previewImage" 
+          alt="preview" 
+          style="max-width: 200px; display: block; margin-top: 8px;" 
+        />
       </div>
       <div>
         <label>Estado</label>
@@ -36,8 +42,7 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useOperationalStore } from '../stores/operational';
-import { API_URL } from '@/config';
-
+import { getImageUrl } from '@/utils/image';
 
 const router = useRouter();
 const store = useOperationalStore();
@@ -51,6 +56,7 @@ const form = reactive({
 });
 
 const file = ref<File | null>(null);
+const previewImage = ref<string | null>(null);
 const message = ref('');
 const error = ref(false);
 
@@ -58,6 +64,12 @@ const handleFileUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
     file.value = target.files[0];
+    // Mostrar previsualización local
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImage.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(target.files[0]);
   }
 };
 

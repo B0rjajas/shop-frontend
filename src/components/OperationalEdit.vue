@@ -16,7 +16,13 @@
       </div>
       <div>
         <label>Imagen actual</label>
-        <img v-if="form.cover" :src="API_URL + form.cover" alt="cover" style="max-width: 200px; display: block;" />
+        <img 
+          v-if="form.cover" 
+          :src="getImageUrl(form.cover)" 
+          alt="cover" 
+          style="max-width: 200px; display: block;" 
+          @error="(e) => (e.target.src = '/placeholder-banner.png')"
+        />
         <input type="file" @change="handleFileUpload" />
         <small>Deja vacío para mantener la imagen actual</small>
       </div>
@@ -38,7 +44,7 @@
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useOperationalStore } from '../stores/operational';
-import { API_URL } from '@/config';
+import { getImageUrl } from '@/utils/image';
 
 const router = useRouter();
 const route = useRoute();
