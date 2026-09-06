@@ -5,7 +5,7 @@
       <button @click="doSearch">Buscar</button>
     </div>
 
-    <el-carousel v-if="banners.length" height="300px" indicator-position="outside">
+     <el-carousel v-if="banners.length" height="300px" indicator-position="outside">
       <el-carousel-item v-for="banner in banners" :key="banner.id">
         <router-link :to="banner.uri || '#'">
           <img
