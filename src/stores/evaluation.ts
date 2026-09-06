@@ -1,8 +1,6 @@
+// src/stores/evaluation.ts
 import { defineStore } from 'pinia';
-import axios from 'axios';
-import { useUserStore } from './user';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+import axios from '@/utils/axios';
 
 export const useEvaluationStore = defineStore('evaluation', {
   state: () => ({
@@ -11,17 +9,10 @@ export const useEvaluationStore = defineStore('evaluation', {
     loading: false,
   }),
   actions: {
-    getAuthHeaders() {
-      const userStore = useUserStore();
-      return { Authorization: `Bearer ${userStore.token}` };
-    },
     async fetchEvaluations(params: { gid?: number; state?: number; offset?: number; limit?: number } = {}) {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/evaluation/list/get`, {
-          params,
-          headers: this.getAuthHeaders(),
-        });
+        const res = await axios.get('/api/evaluation/list/get', { params });
         this.evaluations = res.data.evaluations;
         this.total = res.data.total;
       } catch (error) {
@@ -32,18 +23,10 @@ export const useEvaluationStore = defineStore('evaluation', {
       }
     },
     async createEvaluations(orderId: number, evaluations: Array<{ gid: number; content: string; star: number }>) {
-      await axios.post(
-        `${API_URL}/api/evaluation/create`,
-        { orderId, evaluations },
-        { headers: this.getAuthHeaders() }
-      );
+      await axios.post('/api/evaluation/create', { orderId, evaluations });
     },
     async updateEvaluationState(evalId: number, state: number) {
-      await axios.post(
-        `${API_URL}/api/evaluation/update`,
-        { evalId, state },
-        { headers: this.getAuthHeaders() }
-      );
+      await axios.post('/api/evaluation/update', { evalId, state });
     },
   },
 });

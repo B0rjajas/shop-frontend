@@ -1,10 +1,11 @@
+// src/stores/user.ts
 import { defineStore } from 'pinia';
 
 interface User {
   id: number;
   username: string;
   email: string;
-  role: string;  // 👈 añadir
+  role: string;  // 👈 añadido
 }
 
 export const useUserStore = defineStore('user', {
@@ -36,6 +37,6 @@ export const useUserStore = defineStore('user', {
   },
   getters: {
     isAuthenticated: (state) => !!state.token,
-    isAdmin: (state) => state.user?.role === 'admin',
+    isAdmin: (state) => state.user?.role === 'admin', // 👈 nuevo getter
   },
 });

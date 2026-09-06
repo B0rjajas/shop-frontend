@@ -1,8 +1,6 @@
+// src/stores/cart.ts
 import { defineStore } from 'pinia';
-import axios from 'axios';
-import { useUserStore } from './user';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+import axios from '@/utils/axios';
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -10,16 +8,10 @@ export const useCartStore = defineStore('cart', {
     loading: false,
   }),
   actions: {
-    getAuthHeaders() {
-      const userStore = useUserStore();
-      return { Authorization: `Bearer ${userStore.token}` };
-    },
     async fetchCart() {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/shop/get`, {
-          headers: this.getAuthHeaders(),
-        });
+        const res = await axios.get('/api/shop/get');
         this.items = res.data.items || [];
       } catch (error) {
         console.error(error);
@@ -29,37 +21,20 @@ export const useCartStore = defineStore('cart', {
       }
     },
     async addToCart(productId: number, quantity: number = 1) {
-      await axios.post(
-        `${API_URL}/api/shop/add`,
-        { productId, quantity },
-        { headers: this.getAuthHeaders() }
-      );
+      await axios.post('/api/shop/add', { productId, quantity });
       await this.fetchCart();
     },
     async updateCart(items: any[]) {
-      await axios.post(
-        `${API_URL}/api/shop/update`,
-        { items },
-        { headers: this.getAuthHeaders() }
-      );
+      await axios.post('/api/shop/update', { items });
       await this.fetchCart();
     },
     async clearCart() {
-      await axios.delete(`${API_URL}/api/shop/clear`, {
-        headers: this.getAuthHeaders(),
-      });
+      await axios.delete('/api/shop/clear');
       this.items = [];
     },
     async createCheckoutSession() {
-      console.log('Creando sesión de pago...');
-      const headers = this.getAuthHeaders();
-      console.log('Token enviado a Stripe:', headers);
       try {
-        const res = await axios.post(
-          `${API_URL}/api/stripe/create-checkout-session`,
-          {},
-          { headers: this.getAuthHeaders() }
-        );
+        const res = await axios.post('/api/stripe/create-checkout-session', {});
         return res.data;
       } catch (error) {
         console.error('Error al crear sesión de Stripe:', error);

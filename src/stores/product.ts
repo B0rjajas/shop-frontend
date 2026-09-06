@@ -1,8 +1,7 @@
+// src/stores/product.ts
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios from '@/utils/axios';  // 👈 usar el interceptor
 import { useUserStore } from './user';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export interface Category {
   id: number;
@@ -37,17 +36,10 @@ export const useProductStore = defineStore('product', {
     currentProduct: null as Product | null,
   }),
   actions: {
-    getAuthHeaders() {
-      const userStore = useUserStore();
-      return { Authorization: `Bearer ${userStore.token}` };
-    },
-
     async fetchCategories() {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/products/categories`, {
-          headers: this.getAuthHeaders(),
-        });
+        const res = await axios.get('/api/products/categories');
         this.categories = res.data;
       } catch (error) {
         console.error(error);
@@ -58,33 +50,24 @@ export const useProductStore = defineStore('product', {
     },
 
     async createCategory(data: { name: string; description: string; sort?: number }) {
-      await axios.post(`${API_URL}/api/products/categories`, data, {
-        headers: this.getAuthHeaders(),
-      });
+      await axios.post('/api/products/categories', data);
       await this.fetchCategories();
     },
 
     async updateCategory(id: number, data: { name: string; description: string; sort?: number }) {
-      await axios.put(`${API_URL}/api/products/categories/${id}`, data, {
-        headers: this.getAuthHeaders(),
-      });
+      await axios.put(`/api/products/categories/${id}`, data);
       await this.fetchCategories();
     },
 
     async deleteCategory(id: number) {
-      await axios.delete(`${API_URL}/api/products/categories/${id}`, {
-        headers: this.getAuthHeaders(),
-      });
+      await axios.delete(`/api/products/categories/${id}`);
       await this.fetchCategories();
     },
 
     async fetchProducts(params: { categoryId?: number; offset?: number; limit?: number; keyword?: string } = {}) {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/products/products`, {
-          params,
-          headers: this.getAuthHeaders(),
-        });
+        const res = await axios.get('/api/products/products', { params });
         this.products = res.data.products;
         this.total = res.data.total;
       } catch (error) {
@@ -98,9 +81,7 @@ export const useProductStore = defineStore('product', {
     async fetchProduct(id: number) {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/products/products/${id}`, {
-          headers: this.getAuthHeaders(),
-        });
+        const res = await axios.get(`/api/products/products/${id}`);
         this.currentProduct = res.data;
         return res.data;
       } catch (error) {
@@ -112,29 +93,21 @@ export const useProductStore = defineStore('product', {
     },
 
     async createProduct(data: FormData) {
-      await axios.post(`${API_URL}/api/products/products`, data, {
-        headers: {
-          ...this.getAuthHeaders(),
-          'Content-Type': 'multipart/form-data',
-        },
+      await axios.post('/api/products/products', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       await this.fetchProducts();
     },
 
     async updateProduct(id: number, data: FormData) {
-      await axios.put(`${API_URL}/api/products/products/${id}`, data, {
-        headers: {
-          ...this.getAuthHeaders(),
-          'Content-Type': 'multipart/form-data',
-        },
+      await axios.put(`/api/products/products/${id}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       await this.fetchProducts();
     },
 
     async deleteProduct(id: number) {
-      await axios.delete(`${API_URL}/api/products/products/${id}`, {
-        headers: this.getAuthHeaders(),
-      });
+      await axios.delete(`/api/products/products/${id}`);
       await this.fetchProducts();
     },
   },

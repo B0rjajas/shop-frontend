@@ -1,8 +1,6 @@
+// src/stores/order.ts
 import { defineStore } from 'pinia';
-import axios from 'axios';
-import { useUserStore } from './user';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+import axios from '@/utils/axios';
 
 export const useOrderStore = defineStore('order', {
   state: () => ({
@@ -11,16 +9,11 @@ export const useOrderStore = defineStore('order', {
     loading: false,
   }),
   actions: {
-    getAuthHeaders() {
-      const userStore = useUserStore();
-      return { Authorization: `Bearer ${userStore.token}` };
-    },
     async fetchOrders(params: { offset?: number; limit?: number; filter?: number; order?: string; type?: number } = {}) {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/orders/list/get`, {
+        const res = await axios.get('/api/orders/list/get', {
           params: { ...params, type: params.type ?? 1 },
-          headers: this.getAuthHeaders(),
         });
         this.orders = res.data.orders;
         this.total = res.data.total;
@@ -33,11 +26,7 @@ export const useOrderStore = defineStore('order', {
     },
     async createOrder(address: string) {
       try {
-        await axios.post(
-          `${API_URL}/api/orders/create`,
-          { address },
-          { headers: this.getAuthHeaders() }
-        );
+        await axios.post('/api/orders/create', { address });
         await this.fetchOrders({ filter: 0 });
       } catch (error) {
         console.error(error);
@@ -45,11 +34,7 @@ export const useOrderStore = defineStore('order', {
       }
     },
     async updateOrderState(orderId: number, state: number) {
-      await axios.post(
-        `${API_URL}/api/orders/update`,
-        { orderId, state },
-        { headers: this.getAuthHeaders() }
-      );
+      await axios.post('/api/orders/update', { orderId, state });
       await this.fetchOrders();
     },
   },

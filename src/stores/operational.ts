@@ -1,8 +1,6 @@
+// src/stores/operational.ts
 import { defineStore } from 'pinia';
-import axios from 'axios';
-import { useUserStore } from './user';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+import axios from '@/utils/axios';
 
 export interface Banner {
   id: number;
@@ -21,19 +19,10 @@ export const useOperationalStore = defineStore('operational', {
     currentBanner: null as Banner | null,
   }),
   actions: {
-    getAuthHeaders() {
-      const userStore = useUserStore();
-      return {
-        Authorization: `Bearer ${userStore.token}`,
-      };
-    },
-
     async fetchBanners() {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/operational`, {
-          headers: this.getAuthHeaders(),
-        });
+        const res = await axios.get('/api/operational');
         this.banners = res.data;
       } catch (error) {
         console.error('Error fetching banners:', error);
@@ -46,9 +35,7 @@ export const useOperationalStore = defineStore('operational', {
     async fetchOne(id: number) {
       this.loading = true;
       try {
-        const res = await axios.get(`${API_URL}/api/operational/${id}`, {
-          headers: this.getAuthHeaders(),
-        });
+        const res = await axios.get(`/api/operational/${id}`);
         this.currentBanner = res.data;
         return res.data;
       } catch (error) {
@@ -61,11 +48,8 @@ export const useOperationalStore = defineStore('operational', {
 
     async createBanner(formData: FormData) {
       try {
-        const res = await axios.post(`${API_URL}/api/operational`, formData, {
-          headers: {
-            ...this.getAuthHeaders(),
-            'Content-Type': 'multipart/form-data',
-          },
+        const res = await axios.post('/api/operational', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
         await this.fetchBanners();
         return res.data;
@@ -77,11 +61,8 @@ export const useOperationalStore = defineStore('operational', {
 
     async updateBanner(id: number, formData: FormData) {
       try {
-        const res = await axios.put(`${API_URL}/api/operational/${id}`, formData, {
-          headers: {
-            ...this.getAuthHeaders(),
-            'Content-Type': 'multipart/form-data',
-          },
+        const res = await axios.put(`/api/operational/${id}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
         await this.fetchBanners();
         return res.data;
@@ -93,9 +74,7 @@ export const useOperationalStore = defineStore('operational', {
 
     async updateStatus(id: number, status: number) {
       try {
-        await axios.put(`${API_URL}/api/operational/${id}/status`, { status }, {
-          headers: this.getAuthHeaders(),
-        });
+        await axios.put(`/api/operational/${id}/status`, { status });
         await this.fetchBanners();
       } catch (error) {
         console.error('Error updating status:', error);
@@ -105,9 +84,7 @@ export const useOperationalStore = defineStore('operational', {
 
     async deleteBanner(id: number) {
       try {
-        await axios.delete(`${API_URL}/api/operational/${id}`, {
-          headers: this.getAuthHeaders(),
-        });
+        await axios.delete(`/api/operational/${id}`);
         await this.fetchBanners();
       } catch (error) {
         console.error('Error deleting banner:', error);

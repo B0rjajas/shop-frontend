@@ -7,16 +7,12 @@
         <router-link to="/admin/categories" v-if="isAuthenticated">Categorías</router-link>
         <router-link to="/admin/products" v-if="isAuthenticated">Productos</router-link>
         <router-link to="/admin/orders" v-if="isAuthenticated && isAdmin">Pedidos</router-link>
-
         <router-link to="/cart" v-if="isAuthenticated">Carrito</router-link>
-        <router-link to="/admin/statistics" v-if="isAuthenticated && user?.role === 'admin'">
-  Estadísticas
-</router-link>
-
-      </div>  <!-- ✅ Cerrar nav-left -->
+        <router-link to="/admin/statistics" v-if="isAuthenticated && isAdmin">Estadísticas</router-link>
+      </div>
       <div class="nav-right">
         <template v-if="isAuthenticated">
-          <span>Hola, {{ user?.username }}</span>
+          <span>Hola, {{ user?.username || 'Usuario' }}</span>
           <button @click="logout">Cerrar sesión</button>
         </template>
         <template v-else>
@@ -36,8 +32,7 @@ import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { isAuthenticated, isAdmin } = storeToRefs(userStore);
-
+const { isAuthenticated, isAdmin, user } = storeToRefs(userStore);
 
 const logout = () => {
   userStore.logout();
