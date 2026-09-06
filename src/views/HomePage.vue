@@ -19,7 +19,7 @@
       <el-carousel-item v-for="banner in banners" :key="banner.id">
         <router-link :to="banner.uri || '#'">
           <img
-            :src="banner.cover && banner.cover.startsWith('http') ? banner.cover : API_URL + banner.cover"
+            :src="getImageUrl(banner.cover)"
             alt="banner"
             style="width:100%; height:300px; object-fit:cover;"
           />
@@ -68,7 +68,7 @@
       >
         <img
           v-if="product.image"
-          :src="product.image.startsWith('http') ? product.image : API_URL + product.image"
+          :src="getImageUrl(product.image)"
           alt="product"
           style="width:100%; height:150px; object-fit:cover;"
         />
@@ -111,6 +111,17 @@ const loading = ref(false);
 const hasMore = ref(true);
 const error = ref('');
 const searchQuery = ref('');
+
+// Función para obtener la URL de la imagen (soporta Cloudinary y URLs locales)
+const getImageUrl = (url: string) => {
+  if (!url) return '';
+  // Si la URL ya es absoluta (comienza con http), la devolvemos tal cual
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  // Si no, la concatenamos con la API_URL (para imágenes locales en /uploads)
+  return `${API_URL}${url}`;
+};
 
 const doSearch = () => {
   if (searchQuery.value.trim()) {
