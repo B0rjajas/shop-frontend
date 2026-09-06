@@ -50,6 +50,7 @@ import { ref, onMounted } from 'vue';
 import { useProductStore } from '../stores/product';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { API_URL } from '@/config';
+import { getImageUrl } from '@/utils/image';
 
 const store = useProductStore();
 const products = ref(store.products);

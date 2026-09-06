@@ -46,6 +46,7 @@ import { useCartStore } from '../stores/cart';
 import { useEvaluationStore } from '../stores/evaluation';
 import { ElMessage } from 'element-plus';
 import { API_URL } from '@/config';
+import { getImageUrl } from '@/utils/image'; // 👈 Importar
 
 const route = useRoute();
 const cartStore = useCartStore();

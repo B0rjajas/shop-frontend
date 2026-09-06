@@ -98,6 +98,7 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useOperationalStore } from '../stores/operational';
 import { API_URL } from '@/config';
+import { getImageUrl } from '@/utils/image'; // 👈 Asegurar importación
 
 const router = useRouter();
 const operationalStore = useOperationalStore();
