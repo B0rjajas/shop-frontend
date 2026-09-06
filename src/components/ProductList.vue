@@ -7,10 +7,10 @@
       <el-table-column prop="id" label="ID" width="80" />
       <el-table-column label="Imagen" width="100">
         <template #default="{ row }">
-          <img 
-            v-if="row.image" 
-            :src="getImageUrl(row.image)" 
-            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" 
+          <img
+            v-if="row.image"
+            :src="getImageUrl(row.image)"
+            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
             @error="(e) => (e.target.src = '/placeholder-product.png')"
           />
           <span v-else style="color: #ccc;">Sin imagen</span>
@@ -49,7 +49,7 @@
 import { ref, onMounted } from 'vue';
 import { useProductStore } from '../stores/product';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getImageUrl } from '@/utils/image';
+import { getImageUrl } from '@/utils/image'; // ✅ Importamos
 
 const store = useProductStore();
 const products = ref(store.products);
@@ -82,7 +82,6 @@ const handleDelete = async (id: number) => {
   } catch (error) {
     if (error !== 'cancel') ElMessage.error('Error al eliminar');
   }
-};
 };
 </script>
 

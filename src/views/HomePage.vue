@@ -1,21 +1,11 @@
 <template>
   <div class="home">
-    <!-- Barra de búsqueda -->
     <div class="search-bar">
-      <input
-        v-model="searchQuery"
-        placeholder="Buscar productos..."
-        @keyup.enter="doSearch"
-      />
+      <input v-model="searchQuery" placeholder="Buscar productos..." @keyup.enter="doSearch" />
       <button @click="doSearch">Buscar</button>
     </div>
 
-    <!-- Carrusel de banners -->
-    <el-carousel
-      v-if="banners.length"
-      height="300px"
-      indicator-position="outside"
-    >
+    <el-carousel v-if="banners.length" height="300px" indicator-position="outside">
       <el-carousel-item v-for="banner in banners" :key="banner.id">
         <router-link :to="banner.uri || '#'">
           <img
@@ -34,7 +24,6 @@
 
     <h1>Bienvenido a la Tienda</h1>
 
-    <!-- Categorías -->
     <div class="categories">
       <button
         v-for="cat in categories"
@@ -52,14 +41,9 @@
       </button>
     </div>
 
-    <!-- Productos -->
     <div v-if="error" class="error">{{ error }}</div>
-    <div v-else-if="loading && products.length === 0" class="loading">
-      Cargando productos...
-    </div>
-    <div v-else-if="products.length === 0" class="empty">
-      No hay productos disponibles.
-    </div>
+    <div v-else-if="loading && products.length === 0" class="loading">Cargando productos...</div>
+    <div v-else-if="products.length === 0" class="empty">No hay productos disponibles.</div>
     <div v-else class="product-grid">
       <div
         v-for="product in products"
@@ -76,19 +60,14 @@
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
         <p><strong>${{ product.price }}</strong></p>
-        <p v-if="product.discounted_price" class="discount">
-          Oferta: ${{ product.discounted_price }}
-        </p>
+        <p v-if="product.discounted_price" class="discount">Oferta: ${{ product.discounted_price }}</p>
       </div>
     </div>
 
-    <!-- Botón "Cargar más" -->
     <div v-if="!loading && hasMore && products.length > 0" class="load-more">
       <button @click="loadMore">Cargar más</button>
     </div>
-    <div v-if="loading && products.length > 0" class="loading">
-      Cargando más...
-    </div>
+    <div v-if="loading && products.length > 0" class="loading">Cargando más...</div>
   </div>
 </template>
 
@@ -98,7 +77,7 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useOperationalStore } from '../stores/operational';
 import { API_URL } from '@/config';
-import { getImageUrl } from '@/utils/image'; // 👈 Asegurar importación
+import { getImageUrl } from '@/utils/image'; // ✅ Importamos la función
 
 const router = useRouter();
 const operationalStore = useOperationalStore();
@@ -113,15 +92,6 @@ const loading = ref(false);
 const hasMore = ref(true);
 const error = ref('');
 const searchQuery = ref('');
-
-// ✅ Función para construir URL de imagen correctamente
-const getImageUrl = (path: string) => {
-  if (!path) return '/placeholder-product.png';
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path; // Cloudinary o URL externa
-  }
-  return `${API_URL}${path}`; // Ruta local (uploads)
-};
 
 const doSearch = () => {
   if (searchQuery.value.trim()) {
@@ -150,10 +120,7 @@ const fetchProducts = async (reset = true) => {
 
   loading.value = true;
   try {
-    const params: any = {
-      offset: offset.value,
-      limit: limit,
-    };
+    const params: any = { offset: offset.value, limit };
     if (selectedCategory.value !== null) {
       params.categoryId = selectedCategory.value;
     }
@@ -202,11 +169,7 @@ const loadBanners = async () => {
 };
 
 onMounted(async () => {
-  await Promise.all([
-    loadBanners(),
-    fetchCategories(),
-    fetchProducts(true),
-  ]);
+  await Promise.all([loadBanners(), fetchCategories(), fetchProducts(true)]);
 });
 </script>
 

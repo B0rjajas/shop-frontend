@@ -2,13 +2,11 @@
   <div class="operational-list">
     <h2>Gestión de Banners</h2>
     <button @click="$router.push('/operational/create')" class="btn-create">Crear Banner</button>
-    
+
     <div v-if="store.loading">Cargando...</div>
-    
     <div v-else-if="store.banners.length === 0">
       <p>No hay banners. ¡Crea uno!</p>
     </div>
-    
     <div v-else>
       <div v-for="banner in store.banners" :key="banner.id" class="banner-card">
         <div class="banner-header">
@@ -18,10 +16,10 @@
           </span>
         </div>
         <div class="banner-body">
-          <img 
-            v-if="banner.cover" 
-            :src="getImageUrl(banner.cover)" 
-            alt="cover" 
+          <img
+            v-if="banner.cover"
+            :src="getImageUrl(banner.cover)"
+            alt="cover"
             class="banner-image"
             @error="(e) => (e.target.src = '/placeholder-banner.png')"
           />

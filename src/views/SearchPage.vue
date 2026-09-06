@@ -4,15 +4,15 @@
     <div v-if="loading">Buscando...</div>
     <div v-else-if="products.length === 0" class="empty">No se encontraron productos</div>
     <div v-else class="product-grid">
-      <div 
-        v-for="product in products" 
-        :key="product.id" 
-        class="product-card" 
+      <div
+        v-for="product in products"
+        :key="product.id"
+        class="product-card"
         @click="goToDetail(product.id)"
       >
-        <img 
-          v-if="product.image" 
-          :src="getImageUrl(product.image)" 
+        <img
+          v-if="product.image"
+          :src="getImageUrl(product.image)"
           alt="product"
           @error="(e) => (e.target.src = '/placeholder-product.png')"
         />

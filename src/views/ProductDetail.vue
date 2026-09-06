@@ -1,10 +1,10 @@
 <template>
   <div class="product-detail" v-if="product">
     <div class="top">
-      <img 
-        v-if="product.image" 
-        :src="getImageUrl(product.image)" 
-        alt="product" 
+      <img
+        v-if="product.image"
+        :src="getImageUrl(product.image)"
+        alt="product"
         class="main-image"
         @error="(e) => (e.target.src = '/placeholder-product.png')"
       />
@@ -46,7 +46,7 @@ import { useCartStore } from '../stores/cart';
 import { useEvaluationStore } from '../stores/evaluation';
 import { ElMessage } from 'element-plus';
 import { API_URL } from '@/config';
-import { getImageUrl } from '@/utils/image'; // 👈 Importar
+import { getImageUrl } from '@/utils/image';
 
 const route = useRoute();
 const cartStore = useCartStore();
@@ -54,15 +54,6 @@ const evalStore = useEvaluationStore();
 
 const product = ref<any>(null);
 const evaluations = ref<any[]>([]);
-
-// ✅ Función para construir URL de imagen correctamente
-const getImageUrl = (path: string) => {
-  if (!path) return '/placeholder-product.png';
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path; // Cloudinary o URL externa
-  }
-  return `${API_URL}${path}`; // Ruta local (uploads)
-};
 
 const fetchProduct = async () => {
   try {

@@ -71,6 +71,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { ref, reactive, onMounted, shallowRef, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProductStore } from '../stores/product';
@@ -78,8 +79,7 @@ import { ElMessage } from 'element-plus';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { IDomEditor } from '@wangeditor/editor';
 import '@wangeditor/editor/dist/css/style.css';
-import { getImageUrl } from '@/utils/image'; // 👈 Importar
-
+import { getImageUrl } from '@/utils/image';
 const route = useRoute();
 const router = useRouter();
 const store = useProductStore();
