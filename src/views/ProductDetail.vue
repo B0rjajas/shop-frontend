@@ -1,7 +1,12 @@
 <template>
   <div class="product-detail" v-if="product">
     <div class="top">
-      <img v-if="product.image" :src="API_URL + product.image" alt="product" class="main-image" />
+      <img 
+  v-if="product.image" 
+  :src="product.image.startsWith('http') ? product.image : API_URL + product.image" 
+  alt="product" 
+  class="main-image" 
+/>
       <div class="info">
         <h1>{{ product.name }}</h1>
         <p><strong>Marca:</strong> {{ product.brand }}</p>
@@ -51,16 +56,23 @@ const evaluations = ref<any[]>([]);
 const fetchProduct = async () => {
   try {
     const id = route.params.id;
+    if (!id) return;
     const res = await axios.get(`${API_URL}/api/products/products/${id}`);
     product.value = res.data;
   } catch (error) {
     console.error('Error fetching product:', error);
+    ElMessage.error('No se pudo cargar el producto');
   }
 };
 
 const loadEvaluations = async () => {
   try {
     const productId = route.params.id;
+    // ✅ Validar que sea un número
+    if (!productId || isNaN(Number(productId))) {
+      console.warn('ID de producto inválido para evaluaciones');
+      return;
+    }
     await evalStore.fetchEvaluations({ gid: Number(productId), state: 1, limit: 20 });
     evaluations.value = evalStore.evaluations;
   } catch (error) {

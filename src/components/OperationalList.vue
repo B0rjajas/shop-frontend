@@ -18,7 +18,11 @@
           </span>
         </div>
         <div class="banner-body">
-          <img v-if="banner.cover" :src="API_URL + banner.cover" alt="cover" class="banner-image" />
+          <img
+  :src="banner.cover.startsWith('http') ? banner.cover : API_URL + banner.cover"
+  alt="banner"
+  style="width:100%; height:300px; object-fit:cover;"
+/>
           <div class="banner-info">
             <p><strong>Contenido:</strong> {{ banner.content }}</p>
             <p><strong>URL:</strong> {{ banner.uri }}</p>

@@ -19,7 +19,7 @@
       <el-carousel-item v-for="banner in banners" :key="banner.id">
         <router-link :to="banner.uri || '#'">
           <img
-            :src="API_URL + banner.cover"
+            :src="banner.cover && banner.cover.startsWith('http') ? banner.cover : API_URL + banner.cover"
             alt="banner"
             style="width:100%; height:300px; object-fit:cover;"
           />
@@ -68,8 +68,9 @@
       >
         <img
           v-if="product.image"
-          :src="API_URL + product.image"
-          alt="product image"
+          :src="product.image.startsWith('http') ? product.image : API_URL + product.image"
+          alt="product"
+          style="width:100%; height:150px; object-fit:cover;"
         />
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>

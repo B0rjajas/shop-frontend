@@ -8,10 +8,10 @@
       <el-table-column label="Imagen" width="100">
         <template #default="{ row }">
           <img 
-            v-if="row.image" 
-            :src="API_URL + row.image" 
-            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" 
-          />
+  v-if="row.image" 
+  :src="row.image.startsWith('http') ? row.image : API_URL + row.image" 
+  style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" 
+/>
           <span v-else style="color: #ccc;">Sin imagen</span>
         </template>
       </el-table-column>
