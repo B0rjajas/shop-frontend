@@ -2,11 +2,12 @@
   <div class="product-detail" v-if="product">
     <div class="top">
       <img 
-  v-if="product.image" 
-  :src="product.image.startsWith('http') ? product.image : API_URL + product.image" 
-  alt="product" 
-  class="main-image" 
-/>
+        v-if="product.image" 
+        :src="getImageUrl(product.image)" 
+        alt="product" 
+        class="main-image"
+        @error="(e) => (e.target.src = '/placeholder-product.png')"
+      />
       <div class="info">
         <h1>{{ product.name }}</h1>
         <p><strong>Marca:</strong> {{ product.brand }}</p>
@@ -53,6 +54,15 @@ const evalStore = useEvaluationStore();
 const product = ref<any>(null);
 const evaluations = ref<any[]>([]);
 
+// ✅ Función para construir URL de imagen correctamente
+const getImageUrl = (path: string) => {
+  if (!path) return '/placeholder-product.png';
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path; // Cloudinary o URL externa
+  }
+  return `${API_URL}${path}`; // Ruta local (uploads)
+};
+
 const fetchProduct = async () => {
   try {
     const id = route.params.id;
@@ -68,7 +78,6 @@ const fetchProduct = async () => {
 const loadEvaluations = async () => {
   try {
     const productId = route.params.id;
-    // ✅ Validar que sea un número
     if (!productId || isNaN(Number(productId))) {
       console.warn('ID de producto inválido para evaluaciones');
       return;

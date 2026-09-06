@@ -22,6 +22,7 @@
             :src="getImageUrl(banner.cover)"
             alt="banner"
             style="width:100%; height:300px; object-fit:cover;"
+            @error="(e) => (e.target.src = '/placeholder-banner.png')"
           />
           <div class="banner-content">
             <h3>{{ banner.name }}</h3>
@@ -67,10 +68,10 @@
         @click="goToDetail(product.id)"
       >
         <img
-          v-if="product.image"
           :src="getImageUrl(product.image)"
-          alt="product"
-          style="width:100%; height:150px; object-fit:cover;"
+          alt="producto"
+          style="max-width:100%; height:150px; object-fit:cover;"
+          @error="(e) => (e.target.src = '/placeholder-product.png')"
         />
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
@@ -112,15 +113,13 @@ const hasMore = ref(true);
 const error = ref('');
 const searchQuery = ref('');
 
-// Función para obtener la URL de la imagen (soporta Cloudinary y URLs locales)
-const getImageUrl = (url: string) => {
-  if (!url) return '';
-  // Si la URL ya es absoluta (comienza con http), la devolvemos tal cual
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
+// ✅ Función para construir URL de imagen correctamente
+const getImageUrl = (path: string) => {
+  if (!path) return '/placeholder-product.png';
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path; // Cloudinary o URL externa
   }
-  // Si no, la concatenamos con la API_URL (para imágenes locales en /uploads)
-  return `${API_URL}${url}`;
+  return `${API_URL}${path}`; // Ruta local (uploads)
 };
 
 const doSearch = () => {

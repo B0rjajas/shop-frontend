@@ -8,10 +8,11 @@
       <el-table-column label="Imagen" width="100">
         <template #default="{ row }">
           <img 
-  v-if="row.image" 
-  :src="row.image.startsWith('http') ? row.image : API_URL + row.image" 
-  style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" 
-/>
+            v-if="row.image" 
+            :src="getImageUrl(row.image)" 
+            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" 
+            @error="(e) => (e.target.src = '/placeholder-product.png')"
+          />
           <span v-else style="color: #ccc;">Sin imagen</span>
         </template>
       </el-table-column>
@@ -56,6 +57,12 @@ const total = ref(store.total);
 const currentPage = ref(1);
 const limit = 10;
 
+const getImageUrl = (path: string) => {
+  if (!path) return '/placeholder-product.png';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${API_URL}${path}`;
+};
+
 onMounted(async () => {
   await loadProducts();
 });
@@ -85,12 +92,6 @@ const handleDelete = async (id: number) => {
 </script>
 
 <style scoped>
-.product-list {
-  padding: 20px;
-}
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-}
+.product-list { padding: 20px; }
+.pagination { margin-top: 20px; display: flex; justify-content: flex-end; }
 </style>
