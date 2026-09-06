@@ -49,7 +49,6 @@
 import { ref, onMounted } from 'vue';
 import { useProductStore } from '../stores/product';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { API_URL } from '@/config';
 import { getImageUrl } from '@/utils/image';
 
 const store = useProductStore();
@@ -57,12 +56,6 @@ const products = ref(store.products);
 const total = ref(store.total);
 const currentPage = ref(1);
 const limit = 10;
-
-const getImageUrl = (path: string) => {
-  if (!path) return '/placeholder-product.png';
-  if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  return `${API_URL}${path}`;
-};
 
 onMounted(async () => {
   await loadProducts();
@@ -89,6 +82,7 @@ const handleDelete = async (id: number) => {
   } catch (error) {
     if (error !== 'cancel') ElMessage.error('Error al eliminar');
   }
+};
 };
 </script>
 

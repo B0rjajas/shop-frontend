@@ -46,16 +46,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useOperationalStore } from '../stores/operational';
-import { API_URL } from '@/config';
-import { getImageUrl } from '@/utils/image'; // 👈 Importar
+import { getImageUrl } from '@/utils/image';
 
 const store = useOperationalStore();
-
-const getImageUrl = (path: string) => {
-  if (!path) return '/placeholder-banner.png';
-  if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  return `${API_URL}${path}`;
-};
 
 onMounted(() => {
   store.fetchBanners();

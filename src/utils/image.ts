@@ -1,14 +1,18 @@
-// src/utils/image.ts
 import { API_URL } from '@/config';
 
 export const getImageUrl = (path: string): string => {
   if (!path) {
-    // Si no hay ruta, devolvemos un placeholder externo (no local)
-    return 'https://via.placeholder.com/150/42b883/FFFFFF?text=Producto';
+    console.warn('getImageUrl: path vacío, usando placeholder');
+    return '/placeholder-product.png';
   }
+  // Si es URL absoluta (http o https)
   if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path; // Cloudinary o URL externa
+    console.log('getImageUrl: URL absoluta', path);
+    return path;
   }
+  // Si es ruta local, concatenar con API_URL
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${API_URL}${cleanPath}`;
+  const fullUrl = `${API_URL}${cleanPath}`;
+  console.log('getImageUrl: URL construida', fullUrl);
+  return fullUrl;
 };
