@@ -4,6 +4,7 @@ interface User {
   id: number;
   username: string;
   email: string;
+  role: string;  // 👈 añadir
 }
 
 export const useUserStore = defineStore('user', {
@@ -35,5 +36,6 @@ export const useUserStore = defineStore('user', {
   },
   getters: {
     isAuthenticated: (state) => !!state.token,
+    isAdmin: (state) => state.user?.role === 'admin',
   },
 });
