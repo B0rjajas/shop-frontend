@@ -12,28 +12,8 @@
       </div>
       <button type="submit">Iniciar sesión</button>
     </form>
-
-    <hr />
-
-    <h3>Registro de usuario</h3>
-    <form @submit.prevent="handleRegister">
-      <div>
-        <label>Usuario</label>
-        <input v-model="regUsername" type="text" required />
-      </div>
-      <div>
-        <label>Email</label>
-        <input v-model="regEmail" type="email" required />
-      </div>
-      <div>
-        <label>Contraseña</label>
-        <input v-model="regPassword" type="password" required />
-      </div>
-      <button type="submit">Registrarse</button>
-    </form>
-
     <p v-if="message" :class="{ error: isError }">{{ message }}</p>
-    <p>¿Ya tienes cuenta? <router-link to="/login">Inicia sesión</router-link></p>
+    <p>¿No tienes cuenta? <router-link to="/register">Regístrate aquí</router-link></p>
   </div>
 </template>
 
@@ -46,15 +26,8 @@ import { API_URL } from '@/config';
 const router = useRouter();
 const userStore = useUserStore();
 
-// Login
 const username = ref('');
 const password = ref('');
-
-// Register
-const regUsername = ref('');
-const regEmail = ref('');
-const regPassword = ref('');
-
 const message = ref('');
 const isError = ref(false);
 
@@ -75,33 +48,6 @@ const handleLogin = async () => {
     userStore.setToken(data.token);
     userStore.setUser(data.user);
     message.value = 'Login exitoso. Redirigiendo...';
-    isError.value = false;
-    setTimeout(() => router.push('/'), 1000);
-  } catch (error: any) {
-    message.value = error.message || 'Error de conexión';
-    isError.value = true;
-  }
-};
-
-const handleRegister = async () => {
-  try {
-    const response = await fetch(`${API_URL}/api/users/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: regUsername.value,
-        email: regEmail.value,
-        password: regPassword.value,
-        role: 'user', // Por defecto 'user'
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Error al registrarse');
-    }
-    userStore.setToken(data.token);
-    userStore.setUser(data.user);
-    message.value = 'Registro exitoso. Redirigiendo...';
     isError.value = false;
     setTimeout(() => router.push('/'), 1000);
   } catch (error: any) {
@@ -137,8 +83,5 @@ button {
 }
 .error {
   color: red;
-}
-hr {
-  margin: 1.5rem 0;
 }
 </style>
