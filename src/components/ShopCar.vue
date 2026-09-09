@@ -85,16 +85,12 @@ const confirmOrderWithAddress = async () => {
     return;
   }
   try {
-    // ✅ Crear pedido
     await orderStore.createOrder(address.value);
     ElMessage.success('Pedido creado exitosamente');
     showCheckout.value = false;
     address.value = '';
-    
-    // ✅ Redirigir a Stripe después de crear el pedido
     await stripeStore.createCheckoutSession();
   } catch (error: any) {
-    // ✅ Mostrar mensaje de error específico
     const msg = error.response?.data?.message || 'Error al procesar el pago';
     ElMessage.error(msg);
     console.error('Error en checkout:', error);
