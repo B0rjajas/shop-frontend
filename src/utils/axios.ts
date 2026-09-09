@@ -21,7 +21,7 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor de respuesta: manejar 401 (token expirado o inválido)
+// Interceptor de respuesta: manejar 401
 instance.interceptors.response.use(
   (response) => response,
   (error) => {

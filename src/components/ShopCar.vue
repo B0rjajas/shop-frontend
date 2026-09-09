@@ -33,10 +33,10 @@
       <strong>Total: ${{ cart.totalPrice.toFixed(2) }}</strong>
     </div>
 
-    <el-button type="primary" :disabled="cart.items.length === 0" @click="showCheckout = true">
+    <el-button type="primary" :disabled="cart.items.length === 0" @click="openCheckoutDialog">
       Proceder al pago
     </el-button>
-    <el-button type="primary" :disabled="cart.items.length === 0" @click="handleCheckout">
+    <el-button type="primary" :disabled="cart.items.length === 0" @click="openCheckoutDialog">
       Pagar con Stripe
     </el-button>
 
@@ -57,12 +57,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useCartStore } from '../stores/cart';
-import { useOrderStore } from '../stores/order';
 import { useStripeStore } from '../stores/stripe';
 import { ElMessage } from 'element-plus';
 
 const cart = useCartStore();
-const orderStore = useOrderStore();
 const stripeStore = useStripeStore();
 const showCheckout = ref(false);
 const address = ref('');
@@ -79,40 +77,30 @@ const removeItem = (index: number) => {
   cart.updateCart(newItems);
 };
 
-// 🔥 CORREGIDO: Ya no crea el pedido aquí, se lo pasa al backend de Stripe
+// ✅ Abre el diálogo siempre
+const openCheckoutDialog = () => {
+  if (cart.items.length === 0) {
+    ElMessage.warning('El carrito está vacío');
+    return;
+  }
+  showCheckout.value = true;
+};
+
+// ✅ Aquí se envía la dirección al backend
 const confirmOrderWithAddress = async () => {
   if (!address.value.trim()) {
     ElMessage.warning('Ingresa una dirección de envío');
     return;
   }
   try {
-    // ✅ Pasamos la dirección al backend de Stripe, él creará el pedido
     await stripeStore.createCheckoutSession(address.value);
-    // No llamamos a createOrder aquí
     showCheckout.value = false;
     address.value = '';
-    // El backend ya redirige a Stripe
+    // El backend redirige a Stripe
   } catch (error: any) {
     const msg = error.response?.data?.message || 'Error al procesar el pago';
     ElMessage.error(msg);
     console.error('Error en checkout:', error);
-  }
-};
-
-const handleCheckout = async () => {
-  try {
-    // Para el pago rápido sin dirección, también enviamos una dirección genérica o la pedimos aquí
-    // Como es un flujo alternativo, puedes redirigir al modal o hacer lo mismo.
-    // Por simplicidad, si no hay dirección, pedimos que use el modal.
-    if (!address.value.trim()) {
-      showCheckout.value = true;
-      return;
-    }
-    await stripeStore.createCheckoutSession(address.value);
-  } catch (error: any) {
-    const msg = error.response?.data?.message || 'Error al iniciar el pago';
-    ElMessage.error(msg);
-    console.error('Error en Stripe:', error);
   }
 };
 </script>
