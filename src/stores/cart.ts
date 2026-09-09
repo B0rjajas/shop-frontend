@@ -38,9 +38,9 @@ export const useCartStore = defineStore('cart', {
         return res.data;
       } catch (error) {
         console.error('Error al crear sesión de Stripe:', error);
-        throw error;
+        throw error; // relanzar para que el componente lo maneje
       }
-    },
+    }
   },
   getters: {
     totalItems: (state) => state.items.reduce((acc, item) => acc + item.quantity, 0),
