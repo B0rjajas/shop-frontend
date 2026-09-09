@@ -22,15 +22,16 @@ instance.interceptors.request.use(
 );
 
 // Interceptor de respuesta: manejar 401 (token expirado o inválido)
-instance.interceptors.request.use(
-  (config) => {
-    const userStore = useUserStore();
-    if (userStore.token) {
-      config.headers.Authorization = `Bearer ${userStore.token}`;
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const userStore = useUserStore();
+      userStore.logout();
+      router.push('/login');
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
+    return Promise.reject(error);
+  }
 );
 
 export default instance;
