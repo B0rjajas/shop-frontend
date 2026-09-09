@@ -26,17 +26,23 @@ export const useOrderStore = defineStore('order', {
     },
     async createOrder(address: string) {
       try {
-        await axios.post('/api/orders/create', { address });
+        const res = await axios.post('/api/orders/create', { address });
+        // ✅ Después de crear el pedido, recargar la lista (sin filtros)
         await this.fetchOrders({ filter: 0 });
+        return res.data;
       } catch (error) {
-        console.error('Error al crear pedido:', error);
-        throw error; // relanzar
+        console.error(error);
+        throw error;
       }
-    }}
     },
     async updateOrderState(orderId: number, state: number) {
-      await axios.post('/api/orders/update', { orderId, state });
-      await this.fetchOrders();
+      try {
+        await axios.post('/api/orders/update', { orderId, state });
+        await this.fetchOrders();
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     },
   },
 });

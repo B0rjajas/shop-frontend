@@ -69,15 +69,19 @@ const limit = 10;
 const filterState = ref<number | null>(null);
 
 const loadOrders = async () => {
-  const offset = (currentPage.value - 1) * limit;
-  const params: any = { offset, limit };
-  if (filterState.value !== null) {
-  params.filter = filterState.value;
-}
-  // No enviamos type para que el backend use type=1 (solo del usuario)
-  await store.fetchOrders(params);
-  orders.value = store.orders;
-  total.value = store.total;
+  try {
+    const offset = (currentPage.value - 1) * limit;
+    const params: any = { offset, limit };
+    if (filterState.value !== null) {
+      params.filter = filterState.value;
+    }
+    await store.fetchOrders(params);
+    orders.value = store.orders;
+    total.value = store.total;
+  } catch (error: any) {
+    ElMessage.error('Error al cargar los pedidos');
+    console.error(error);
+  }
 };
 
 const handlePageChange = (page: number) => {
@@ -87,11 +91,11 @@ const handlePageChange = (page: number) => {
 
 const confirmReceived = async (orderId: number) => {
   try {
-    await store.updateOrderState(orderId, 2); // estado 2 = recibido
+    await store.updateOrderState(orderId, 2);
     ElMessage.success('Pedido recibido');
     await loadOrders();
-  } catch (error) {
-    ElMessage.error('Error al confirmar recepción');
+  } catch (error: any) {
+    ElMessage.error(error.response?.data?.message || 'Error al confirmar recepción');
   }
 };
 
