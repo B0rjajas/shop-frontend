@@ -29,8 +29,8 @@ export const useOrderStore = defineStore('order', {
         await axios.post('/api/orders/create', { address });
         await this.fetchOrders({ filter: 0 });
       } catch (error) {
-        console.error(error);
-        throw error;
+        console.error('Error creando pedido:', error);
+        throw error; // Re-lanzar para que el componente lo maneje
       }
     },
     async updateOrderState(orderId: number, state: number) {

@@ -89,10 +89,12 @@ const confirmOrderWithAddress = async () => {
     ElMessage.success('Pedido creado exitosamente');
     showCheckout.value = false;
     address.value = '';
-    // Redirigir a Stripe
+    // Ahora redirigir a Stripe
     await stripeStore.createCheckoutSession();
-  } catch (error) {
-    ElMessage.error('Error al procesar el pago');
+  } catch (error: any) {
+    const msg = error.response?.data?.message || error.message || 'Error al procesar el pago';
+    ElMessage.error(msg);
+    console.error('Error en confirmOrderWithAddress:', error);
   }
 };
 
@@ -100,8 +102,10 @@ const handleCheckout = async () => {
   try {
     const data = await cart.createCheckoutSession();
     window.location.href = data.url;
-  } catch (error) {
-    ElMessage.error('Error al iniciar el pago');
+  } catch (error: any) {
+    const msg = error.response?.data?.message || error.message || 'Error al iniciar el pago';
+    ElMessage.error(msg);
+    console.error('Error en handleCheckout:', error);
   }
 };
 </script>
