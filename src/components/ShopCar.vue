@@ -79,17 +79,19 @@ const removeItem = (index: number) => {
   cart.updateCart(newItems);
 };
 
+// 🔥 CORREGIDO: Ya no crea el pedido aquí, se lo pasa al backend de Stripe
 const confirmOrderWithAddress = async () => {
   if (!address.value.trim()) {
     ElMessage.warning('Ingresa una dirección de envío');
     return;
   }
   try {
-    await orderStore.createOrder(address.value);
-    ElMessage.success('Pedido creado exitosamente');
+    // ✅ Pasamos la dirección al backend de Stripe, él creará el pedido
+    await stripeStore.createCheckoutSession(address.value);
+    // No llamamos a createOrder aquí
     showCheckout.value = false;
     address.value = '';
-    await stripeStore.createCheckoutSession();
+    // El backend ya redirige a Stripe
   } catch (error: any) {
     const msg = error.response?.data?.message || 'Error al procesar el pago';
     ElMessage.error(msg);
@@ -99,8 +101,14 @@ const confirmOrderWithAddress = async () => {
 
 const handleCheckout = async () => {
   try {
-    const data = await cart.createCheckoutSession();
-    window.location.href = data.url;
+    // Para el pago rápido sin dirección, también enviamos una dirección genérica o la pedimos aquí
+    // Como es un flujo alternativo, puedes redirigir al modal o hacer lo mismo.
+    // Por simplicidad, si no hay dirección, pedimos que use el modal.
+    if (!address.value.trim()) {
+      showCheckout.value = true;
+      return;
+    }
+    await stripeStore.createCheckoutSession(address.value);
   } catch (error: any) {
     const msg = error.response?.data?.message || 'Error al iniciar el pago';
     ElMessage.error(msg);
