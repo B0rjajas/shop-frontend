@@ -1,4 +1,3 @@
-<!-- src/components/StatisticalComponent.vue -->
 <template>
   <div class="statistical-container">
     <h2>Panel de Estadísticas</h2>
@@ -8,28 +7,32 @@
       <div class="stat-card">
         <h3>Usuarios</h3>
         <div class="stat-number">{{ userStats.allCount }}</div>
-        <v-chart class="chart" :option="userChartOption" />
+        <div v-if="userStats.datas.length === 0" class="no-data-chart">Sin actividad en los últimos 30 días</div>
+        <v-chart v-else class="chart" :option="userChartOption" />
       </div>
 
       <!-- Pedidos -->
       <div class="stat-card">
         <h3>Pedidos</h3>
         <div class="stat-number">{{ orderStats.allCount }}</div>
-        <v-chart class="chart" :option="orderChartOption" />
+        <div v-if="orderStats.datas.length === 0" class="no-data-chart">Sin actividad en los últimos 30 días</div>
+        <v-chart v-else class="chart" :option="orderChartOption" />
       </div>
 
       <!-- Ventas -->
       <div class="stat-card">
         <h3>Ventas totales</h3>
-        <div class="stat-number">${{ salesStats.allCount?.toFixed(2) || 0 }}</div>
-        <v-chart class="chart" :option="salesChartOption" />
+        <div class="stat-number">${{ Number(salesStats.allCount || 0).toFixed(2) }}</div>
+        <div v-if="salesStats.datas.length === 0" class="no-data-chart">Sin actividad en los últimos 30 días</div>
+        <v-chart v-else class="chart" :option="salesChartOption" />
       </div>
 
       <!-- Evaluaciones -->
       <div class="stat-card">
         <h3>Evaluaciones</h3>
         <div class="stat-number">{{ evaluationStats.allCount }}</div>
-        <v-chart class="chart" :option="evaluationChartOption" />
+        <div v-if="evaluationStats.datas.length === 0" class="no-data-chart">Sin actividad en los últimos 30 días</div>
+        <v-chart v-else class="chart" :option="evaluationChartOption" />
       </div>
     </div>
   </div>
@@ -48,23 +51,27 @@ const salesStats = ref<any>({ allCount: 0, datas: [] });
 const evaluationStats = ref<any>({ allCount: 0, datas: [] });
 
 const createChartOption = (data: any[], label: string) => {
-  const dates = data.map((d: any) => d.date || '');
-  const values = data.map((d: any) => d.count || d.total || 0);
+  // 🔥 Asegurar que date y count/total sean strings y numbers
+  const dates = data.map((d: any) => String(d.date || ''));
+  const values = data.map((d: any) => Number(d.count ?? d.total ?? 0));
 
   return {
     tooltip: { trigger: 'axis' },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
       type: 'category',
-      data: dates.length ? dates : ['Sin datos'],
+      data: dates,
       axisLabel: { rotate: 30, fontSize: 10 },
     },
-    yAxis: { type: 'value' },
+    yAxis: { 
+      type: 'value',
+      minInterval: 1, // 🔥 para que el eje Y muestre enteros
+    },
     series: [
       {
         name: label,
         type: 'bar',
-        data: values.length ? values : [0],
+        data: values,
         itemStyle: { color: '#42b883' },
       },
     ],
@@ -74,12 +81,12 @@ const createChartOption = (data: any[], label: string) => {
 const loadStats = async () => {
   loading.value = true;
   try {
-    // Usar el store en lugar de axios directamente
     await store.loadAllStats();
     userStats.value = store.userStats;
     orderStats.value = store.orderStats;
     salesStats.value = store.salesStats;
     evaluationStats.value = store.evaluationStats;
+    console.log('Stats loaded:', { userStats: userStats.value, orderStats: orderStats.value });
   } catch (error) {
     console.error('Error loading stats:', error);
   } finally {
@@ -123,6 +130,16 @@ onMounted(loadStats);
 .chart {
   width: 100%;
   height: 200px;
+}
+.no-data-chart {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-style: italic;
+  background: #fafafa;
+  border-radius: 4px;
 }
 .loading {
   text-align: center;
