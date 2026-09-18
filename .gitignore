@@ -27,3 +27,11 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+
+# Dumps temporales de contexto (se regeneran con find+cat)
+*_context.txt
+*_completo.txt
+filelist.txt
+project.txt
+shop-frontend
