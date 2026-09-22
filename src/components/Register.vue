@@ -52,7 +52,8 @@ const handleRegister = async () => {
     if (!response.ok) {
       throw new Error(data.message || 'Error al registrarse');
     }
-    userStore.setToken(data.token);
+    userStore.setToken(data.access_token);
+
     userStore.setUser(data.user);
     message.value = 'Registro exitoso. Redirigiendo...';
     isError.value = false;

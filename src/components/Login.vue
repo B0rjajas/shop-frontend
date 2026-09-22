@@ -44,7 +44,8 @@ const handleLogin = async () => {
     if (!response.ok) {
       throw new Error(data.message || 'Error al iniciar sesión');
     }
-    userStore.setToken(data.token);
+    userStore.setToken(data.access_token);
+
     userStore.setUser(data.user);
     message.value = 'Login exitoso. Redirigiendo...';
     isError.value = false;
