@@ -3,9 +3,9 @@
     <nav>
       <div class="nav-left">
         <router-link to="/">Inicio</router-link>
-        <router-link to="/operational" v-if="isAuthenticated">Banners</router-link>
-        <router-link to="/admin/categories" v-if="isAuthenticated">Categorías</router-link>
-        <router-link to="/admin/products" v-if="isAuthenticated">Productos</router-link>
+        <router-link to="/operational" v-if="isAuthenticated && isAdmin">Banners</router-link>
+<router-link to="/admin/categories" v-if="isAuthenticated && isAdmin">Categorías</router-link>
+<router-link to="/admin/products" v-if="isAuthenticated && isAdmin">Productos</router-link>
         <router-link to="/admin/orders" v-if="isAuthenticated && isAdmin">Pedidos</router-link>
         <router-link to="/cart" v-if="isAuthenticated">Carrito</router-link>
         <router-link to="/admin/statistics" v-if="isAuthenticated && isAdmin">Estadísticas</router-link>
@@ -38,7 +38,6 @@ const logout = async () => {
   await userStore.logout();
   router.push('/login');
 };
-
 </script>
 
 <style>
