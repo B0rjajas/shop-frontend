@@ -91,13 +91,28 @@ const handlePageChange = (page: number) => {
 
 const confirmReceived = async (orderId: number) => {
   try {
-    await store.updateOrderState(orderId, 2);
+    // receiveOrder ya re-sincroniza el store internamente (fetchOrders),
+    // por eso no hace falta llamar a loadOrders() aquí.
+    await store.receiveOrder(orderId);
     ElMessage.success('Pedido recibido');
-    await loadOrders();
   } catch (error: any) {
-    ElMessage.error(error.response?.data?.message || 'Error al confirmar recepción');
+    const status = error.response?.status;
+    const backendMsg = error.response?.data?.message;
+
+    if (status === 409) {
+      // El backend dice: "el pedido no está en estado Enviado".
+      // Suele pasar si la vista estaba desactualizada (otra pestaña,
+      // doble click, el admin cambió el estado...). El store ya ha
+      // refrescado la lista, así que basta con avisar.
+      ElMessage.warning(backendMsg || 'Este pedido ya no se puede marcar como recibido');
+    } else if (status === 404) {
+      ElMessage.error(backendMsg || 'Pedido no encontrado');
+    } else {
+      ElMessage.error(backendMsg || 'Error al confirmar recepción');
+    }
   }
 };
+
 
 const goToEvaluation = (orderId: number) => {
   router.push(`/evaluation/${orderId}`);

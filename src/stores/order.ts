@@ -44,5 +44,15 @@ export const useOrderStore = defineStore('order', {
         throw error;
       }
     },
+
+    async receiveOrder(orderId: number) {
+      try {
+        await axios.post('/api/orders/receive', { orderId });
+        await this.fetchOrders();
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
   },
 });
