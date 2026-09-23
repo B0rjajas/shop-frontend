@@ -25,7 +25,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
-import { API_URL } from '@/config';
+import axios from '@/utils/axios';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -38,28 +38,21 @@ const isError = ref(false);
 
 const handleRegister = async () => {
   try {
-    const response = await fetch(`${API_URL}/api/users/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: username.value,
-        email: email.value,
-        password: password.value,
-        role: 'user', // Por defecto 'user' para la tienda normal
-      }),
+    // Sin `role` en el body. El backend lo ignora desde la sesión 8
+    // (siempre asigna 'user'), así que quitarlo aquí refleja el contrato real.
+    const { data } = await axios.post('/api/users/register', {
+      username: username.value,
+      email: email.value,
+      password: password.value,
     });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Error al registrarse');
-    }
-    userStore.setToken(data.access_token);
 
+    userStore.setToken(data.access_token);
     userStore.setUser(data.user);
     message.value = 'Registro exitoso. Redirigiendo...';
     isError.value = false;
     setTimeout(() => router.push('/'), 1000);
   } catch (error: any) {
-    message.value = error.message || 'Error de conexión';
+    message.value = error.response?.data?.message || 'Error de conexión';
     isError.value = true;
   }
 };

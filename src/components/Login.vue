@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
-import { API_URL } from '@/config';
+import axios from '@/utils/axios';
 
 const username = ref('');
 const password = ref('');
@@ -32,26 +32,18 @@ const userStore = useUserStore();
 
 const handleLogin = async () => {
   try {
-    const response = await fetch(`${API_URL}/api/users/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value,
-      }),
+    const { data } = await axios.post('/api/users/login', {
+      username: username.value,
+      password: password.value,
     });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Error al iniciar sesión');
-    }
-    userStore.setToken(data.access_token);
 
+    userStore.setToken(data.access_token);
     userStore.setUser(data.user);
     message.value = 'Login exitoso. Redirigiendo...';
     isError.value = false;
     setTimeout(() => router.push('/'), 1000);
   } catch (error: any) {
-    message.value = error.message || 'Error de conexión';
+    message.value = error.response?.data?.message || 'Error de conexión';
     isError.value = true;
   }
 };
