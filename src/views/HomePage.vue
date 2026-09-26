@@ -74,9 +74,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+
+import axios from '@/utils/axios';
 import { useOperationalStore } from '../stores/operational';
-import { API_URL } from '@/config';
+
+
 import { getImageUrl } from '@/utils/image'; // ✅ Importamos la función
 
 const router = useRouter();
@@ -101,7 +103,8 @@ const doSearch = () => {
 
 const fetchCategories = async () => {
   try {
-    const res = await axios.get(`${API_URL}/api/products/categories`);
+    const res = await axios.get('/api/products/categories');
+
     categories.value = res.data;
   } catch (err) {
     console.error('Error al cargar categorías:', err);
@@ -125,7 +128,8 @@ const fetchProducts = async (reset = true) => {
       params.categoryId = selectedCategory.value;
     }
 
-    const res = await axios.get(`${API_URL}/api/products/products`, { params });
+    const res = await axios.get('/api/products/products', { params });
+
     const newProducts = res.data.products || [];
 
     if (reset) {

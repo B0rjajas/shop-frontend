@@ -27,8 +27,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
-import { API_URL } from '@/config';
+import axios from '@/utils/axios';
+
+
 import { getImageUrl } from '@/utils/image';
 
 const route = useRoute();
@@ -41,9 +42,9 @@ const fetchSearch = async () => {
   if (!keyword.value) return;
   loading.value = true;
   try {
-    const res = await axios.get(`${API_URL}/api/products/products`, {
-      params: { keyword: keyword.value }
-    });
+    const res = await axios.get('/api/products/products', {
+   params: { keyword: keyword.value }
+   });
     products.value = res.data.products;
   } catch (error) {
     console.error(error);

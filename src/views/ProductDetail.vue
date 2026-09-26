@@ -41,11 +41,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import axios from 'axios';
+
+import axios from '@/utils/axios';
 import { useCartStore } from '../stores/cart';
 import { useEvaluationStore } from '../stores/evaluation';
 import { ElMessage } from 'element-plus';
-import { API_URL } from '@/config';
+
+
 import { getImageUrl } from '@/utils/image';
 
 const route = useRoute();
@@ -59,7 +61,7 @@ const fetchProduct = async () => {
   try {
     const id = route.params.id;
     if (!id) return;
-    const res = await axios.get(`${API_URL}/api/products/products/${id}`);
+    const res = await axios.get(`/api/products/products/${id}`);
     product.value = res.data;
   } catch (error) {
     console.error('Error fetching product:', error);
