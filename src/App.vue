@@ -9,6 +9,7 @@
         <router-link to="/admin/orders" v-if="isAuthenticated && isAdmin">Pedidos</router-link>
         <router-link to="/cart" v-if="isAuthenticated">Carrito</router-link>
         <router-link to="/admin/statistics" v-if="isAuthenticated && isAdmin">Estadísticas</router-link>
+<router-link to="/admin/evaluations" v-if="isAuthenticated && isAdmin">Evaluaciones</router-link>
       </div>
       <div class="nav-right">
         <template v-if="isAuthenticated">

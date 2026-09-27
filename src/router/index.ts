@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useUserStore } from '../stores/user';
 
+import EvaluationList from '../components/EvaluationList.vue';
+
 // Componentes públicos
 import HomePage from '../views/HomePage.vue';
 import ProductDetail from '../views/ProductDetail.vue';
@@ -51,6 +53,8 @@ const routes = [
   { path: '/admin/product/:id', component: ProductEditor, meta: { requiresAuth: true, requiresAdmin: true }, props: true },
   { path: '/admin/orders', component: OrderList, meta: { requiresAuth: true, requiresAdmin: true } },
   { path: '/admin/statistics', component: StatisticalComponent, meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/admin/evaluations', component: EvaluationList, meta: { requiresAuth: true, requiresAdmin: true } },
+
 ];
 
 const router = createRouter({

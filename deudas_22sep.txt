@@ -1,0 +1,57 @@
+DEUDAS DEL PROYECTO
+===================
+22 septiembe 17:00
+1. [INFRA] Cookies third-party. Frontend y backend en dominios distintos
+   (Vercel ↔ Render, y localmente 127.0.0.1 ↔ codespace.app.github.dev).
+   Chrome bloquea la cookie refresh_token aunque sea SameSite=None; Secure.
+   Solución: reverse proxy para servir frontend y backend bajo el mismo
+   dominio (midominio.com/* y midominio.com/api/*). Bloqueante antes
+   de lanzamiento real, no urgente durante desarrollo.
+
+2. [SEGURIDAD] Rotar credenciales filtradas en chat:
+   - JWT_SECRET
+   - TURSO_AUTH_TOKEN
+   - STRIPE_SECRET_KEY (test)
+   Hacerlo antes de subir a producción real.
+
+3. [REFINAMIENTO] Refresh tokens: distinguir motivo de revocación
+   ('rotated' | 'logout' | 'reuse') en la tabla RefreshTokens para que
+   el log no diga "reuso detectado" cuando simplemente es un token ya
+   revocado por rotación normal.
+
+4. [RENDIMIENTO FRONTEND] Bundle de 2.5MB. Warning de Vite.
+   Considerar code-splitting y lazy loading de rutas con defineAsyncComponent.
+
+5. [REFACTOR] Endpoints admin (/admin/orders, /admin/statistics) no
+   comprueban rol admin en backend. Cualquier usuario logueado puede
+   acceder. Añadir middleware isAdmin.
+
+6. [LIMPIEZA] Componentes huérfanos en frontend: OperationalForm.vue,
+   Home.vue, HelloWorld.vue. No están en el router, o están rotos
+   (OperationalForm llama a métodos que no existen en el store).
+
+7. [TEST] Actualizar los tests de webhook para el nuevo userController
+   con refresh tokens. Ahora los tests mockean createOrder directamente,
+   siguen pasando, pero conviene revisar cobertura.
+
+8. [INFRA] npm audit: 7 vulnerabilidades (3 moderate, 3 high, 1 critical)
+   en el backend. No atacado aún. Revisar con calma sin npm audit fix --force.
+
+
+
+   22 Septiembre 19:15
+
+   [Sesión 8 — Autorización]
+[x] requireAdmin middleware aplicado a statistical, orders/update, products, operational
+[x] register sin aceptar role del body
+[x] guard requiresAdmin en router del frontend
+[ ] XSS: product.detail se renderiza con v-html sin sanitizar (solo admins pueden meterlo,
+    pero debería sanitizarse igual con sanitize-html)
+[ ] Validación con esquema (Zod o Joi): precios negativos, stock no entero, star fuera de 1-5,
+    quantity desorbitado en carrito
+[ ] File upload: validar por magic bytes, no por mimetype (que viene del cliente)
+[ ] JWT_SECRET || 'secreto_super_seguro': quitar el fallback hardcoded.
+    Debe petar al arrancar si falta.
+[ ] evaluationRoutes.ts: update permite a cualquier logueado cambiar estado de evaluación
+[ ] orderController.update: acepta orderId sin comprobar ownership (ahora requiere admin,
+    pero si en el futuro se permite a usuarios cancelar, hay que verificar user_id)

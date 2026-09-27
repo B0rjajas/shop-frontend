@@ -24,27 +24,30 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import { useEvaluationStore } from '../stores/evaluation';
-  import { ElMessage } from 'element-plus';
-  
-  const store = useEvaluationStore();
-  const evaluations = ref(store.evaluations);
-  
-  const load = async () => {
-    await store.fetchEvaluations({ state: 0 }); // solo pendientes
-    evaluations.value = store.evaluations;
-  };
-  
-  const updateState = async (id: number, state: number) => {
-    try {
-      await store.updateEvaluationState(id, state);
-      ElMessage.success('Estado actualizado');
-      await load();
-    } catch (error) {
-      ElMessage.error('Error');
-    }
-  };
-  
-  onMounted(load);
-  </script>
+import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useEvaluationStore } from '../stores/evaluation';
+import { ElMessage } from 'element-plus';
+
+const store = useEvaluationStore();
+
+// storeToRefs enlaza de forma reactiva con el state del store.
+// A diferencia de `ref(store.evaluations)`, que hace una copia.
+const { evaluations } = storeToRefs(store);
+
+const load = async () => {
+  await store.fetchEvaluations({ state: 0 });
+};
+
+const updateState = async (id: number, state: number) => {
+  try {
+    await store.updateEvaluationState(id, state);
+    ElMessage.success('Estado actualizado');
+    await load();
+  } catch (error) {
+    ElMessage.error('Error');
+  }
+};
+
+onMounted(load);
+</script>

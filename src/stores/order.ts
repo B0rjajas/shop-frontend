@@ -54,5 +54,14 @@ export const useOrderStore = defineStore('order', {
         throw error;
       }
     },
+        /**
+     * Obtiene UN pedido concreto con sus items ya parseados.
+     * No se guarda en el state: solo lo consume la vista de evaluación.
+     * Si se reutiliza en más sitios, se promueve a state.
+     */
+        async fetchOrderById(orderId: number) {
+          const res = await axios.get(`/api/orders/${orderId}`);
+          return res.data;
+        },
   },
 });
