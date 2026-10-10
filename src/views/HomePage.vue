@@ -11,8 +11,7 @@
           <img
             :src="getImageUrl(banner.cover)"
             alt="banner"
-            style="width:100%; height:300px; object-fit:cover;"
-            @error="(e) => (e.target.src = '/placeholder-banner.png')"
+            
           />
           <div class="banner-content">
             <h3>{{ banner.name }}</h3>
@@ -232,9 +231,10 @@ onMounted(async () => {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 .product-card img {
-  max-width: 100%;
-  height: 150px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
+  border-radius: 6px;
 }
 .discount { color: red; }
 .load-more { text-align: center; margin-top: 20px; }
@@ -260,5 +260,15 @@ onMounted(async () => {
   background: rgba(0,0,0,0.5);
   padding: 10px 20px;
   border-radius: 8px;
+}
+
+.home { padding: 12px; }
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .product-card {
+    padding: 12px;
+  }
 }
 </style>

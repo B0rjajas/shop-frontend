@@ -64,6 +64,11 @@ onMounted(fetchSearch);
 .search-page { padding: 20px; }
 .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
 .product-card { border: 1px solid #eee; padding: 15px; border-radius: 8px; cursor: pointer; }
-.product-card img { max-width: 100%; height: 150px; object-fit: cover; }
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
+}
 .empty { text-align: center; padding: 40px; color: #888; }
 </style>
