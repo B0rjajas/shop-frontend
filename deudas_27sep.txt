@@ -1,0 +1,129 @@
+ Deuda NUEVA que he detectado hoy mirando el código
+Estas 4 no están en tu lista y son más importantes que las que tenías apuntadas:
+
+1. operationalRoutes.ts tiene las rutas duplicadas
+ts
+router.post('/', upload.single('cover'), create);                    // ← línea 1
+router.put('/:id', upload.single('cover'), update);                  // ← línea 1
+router.put('/:id/status', updateStatus);
+router.delete('/:id', remove);
+
+router.post('/', upload.single('cover'), validateImage, create);     // ← línea 2 (¡con validación!)
+router.put('/:id', upload.single('cover'), validateImage, update);   // ← línea 2
+Express ejecuta la PRIMERA coincidencia y para. Como la línea 1 viene antes, validateImage nunca se ejecuta en los banners. Es decir: los banners aceptan cualquier archivo que declare mimetype: image/* en el header, aunque sea un ejecutable disfrazado. Los productos sí están protegidos, los banners no.
+
+Fix: borrar las dos primeras líneas. 30 segundos.
+
+2. result.changes sigue vivo en 5 sitios más que no tocamos
+En la sesión 13 cerramos 6 funciones. Pero quedan:
+
+Archivo	Función	Línea
+operationalController.ts	update	if (result.changes === 0)
+operationalController.ts	updateStatus	if (result.changes === 0)
+operationalController.ts	remove	if (result.changes === 0)
+auth.service.ts	revokeRefreshToken	(result.changes ?? 0) > 0
+cart.service.ts	addToCart	if (result.changes === 0) (fallback insert)
+Los de operationalController tienen el mismo bug que ya arreglamos: un PUT /api/operational/:id que sí actualice puede devolver 404 falso.
+
+Los de auth y cart son más sutiles:
+
+revokeRefreshToken → si Turso no rellena changes, el logout no limpia el token en BD aunque el UPDATE se ejecute. Silencioso.
+
+addToCart → si Turso no rellena changes, entra en el fallback y hace un INSERT extra. Puede crear carritos duplicados.
+
+3. operationalController.ts no tiene Zod
+Todos los endpoints de escritura tienen Zod... excepto los de banners. Es deuda de coherencia con la política "Zod en TODO lo que escribe".
+
+4. Sin transacciones en ningún sitio
+Nunca lo hemos hablado formalmente. createEvaluations inserta N evaluaciones y luego hace un UPDATE en Orders. Si falla a mitad, quedan evaluaciones huérfanas y el pedido sin marcar. Lo vamos a atacar en la sesión del SRP.
+
+📋 Lista completa de deuda VIVA (backend)
+Alta prioridad (riesgo real o incoherencia):
+
+createEvaluations viola SRP (⭐ objetivo próxima sesión)
+
+Sin transacciones (⭐ se toca con lo de arriba)
+
+operationalRoutes.ts con rutas duplicadas → validateImage no corre
+
+result.changes en 5 sitios (3 en banners, 1 auth, 1 cart)
+
+operationalController.ts sin Zod
+
+No hay Zod en order/update ni en statistical/get
+
+Media prioridad (arreglo local, bajo riesgo):
+
+deleteProduct borrado físico → mejor soft delete
+
+JWT_SECRET duplicado en middleware/auth.ts y services/auth.service.ts
+
+utils/cloudinary.ts duplica services/cloudinary.service.ts
+
+polyfills.ts + undici son código muerto en Node 20
+
+Baja prioridad (cosmético):
+
+Forma rara del JSON del carrito (claves numéricas)
+
+type=1 / type=0 en /orders/list/get es semánticamente raro
+
+📋 Lista completa de deuda VIVA (frontend)
+Alta prioridad:
+
+OperationalForm.vue sigue roto (llama a store.fetchItems, store.items, store.createItem que no existen). Y usa router.push('/admin/operational') — esa ruta tampoco existe.
+
+api/upload referenciado en ProductEditor.vue para WangEditor → endpoint que no existe. Si algún admin intenta subir una imagen desde el editor, falla silenciosamente.
+
+Media prioridad:
+
+discounted_price || price en ShopCar.vue (x2) y en stores/cart.ts getter → debería ser ??
+
+ref(store.x) no reactivo en ProductList.vue, OrderPage.vue, CategoryManager.vue (mismo bug que ya arreglamos en EvaluationList)
+
+Baja prioridad:
+
+ShopCar.vue tiene dos botones que hacen lo mismo ("Proceder al pago" y "Pagar con Stripe")
+
+stores/product.ts importa useUserStore pero no lo usa
+
+console.log en código de producción: utils/image.ts, config.ts, varios stores
+
+Bundle Vite >500 kB (warning de build) — se arregla con manualChunks o code-splitting
+
+📋 Deuda operativa
+No hay entorno staging (⭐ mi recomendación para una sesión próxima)
+
+Cookies third-party Vercel ↔ Render (reverse proxy pendiente)
+
+npm run dev en backend contra la BD de producción. Es lo mismo que el punto 1.
+
+Mi recomendación para la próxima sesión
+Hay 3 cosas que tocan deuda crítica y se cierran rápido:
+
+Sesión A — "cerrar el bug de changes de verdad" (~25 min):
+
+operationalRoutes.ts duplicado (arreglar validateImage)
+
+5 result.changes restantes
+
+Añadir Zod a operationalController y a order/update
+
+Sesión B — SRP + transacciones en createEvaluations (~40 min):
+
+Mover el UPDATE a order.service
+
+Introducir transacciones en Turso/libSQL para el flujo "crear N evaluaciones + marcar pedido"
+
+Discutir dependencias circulares y por qué el orden importa
+
+Sesión C — staging (~30 min):
+
+BD Turso separada para staging
+
+Env vars separadas
+
+Proteger producción de npm run dev
+
+Yo haría A → B → C. A es el más barato y más urgente (bug real en producción: banners sin validar). B es el más educativo (transacciones + SRP, tema de entrevista). C es el más "adulto" (higiene operacional) y probablemente el que te salve de un susto.
+
