@@ -5,13 +5,12 @@
       <button @click="doSearch">Buscar</button>
     </div>
 
-     <el-carousel v-if="banners.length" height="300px" indicator-position="outside">
+    <el-carousel v-if="banners.length" height="300px" indicator-position="outside">
       <el-carousel-item v-for="banner in banners" :key="banner.id">
         <router-link :to="banner.uri || '#'">
           <img
             :src="getImageUrl(banner.cover)"
             alt="banner"
-            
           />
           <div class="banner-content">
             <h3>{{ banner.name }}</h3>
@@ -53,7 +52,6 @@
         <img
           :src="getImageUrl(product.image)"
           alt="producto"
-          style="max-width:100%; height:150px; object-fit:cover;"
           @error="(e) => (e.target.src = '/placeholder-product.png')"
         />
         <h3>{{ product.name }}</h3>
@@ -77,8 +75,7 @@ import { useRouter } from 'vue-router';
 import axios from '@/utils/axios';
 import { useOperationalStore } from '../stores/operational';
 
-
-import { getImageUrl } from '@/utils/image'; // ✅ Importamos la función
+import { getImageUrl } from '@/utils/image';
 
 const router = useRouter();
 const operationalStore = useOperationalStore();
@@ -103,7 +100,6 @@ const doSearch = () => {
 const fetchCategories = async () => {
   try {
     const res = await axios.get('/api/products/categories');
-
     categories.value = res.data;
   } catch (err) {
     console.error('Error al cargar categorías:', err);
@@ -128,7 +124,6 @@ const fetchProducts = async (reset = true) => {
     }
 
     const res = await axios.get('/api/products/products', { params });
-
     const newProducts = res.data.products || [];
 
     if (reset) {
@@ -236,6 +231,9 @@ onMounted(async () => {
   object-fit: cover;
   border-radius: 6px;
 }
+.product-card h3 {
+  margin-top: 10px;
+}
 .discount { color: red; }
 .load-more { text-align: center; margin-top: 20px; }
 .load-more button {
@@ -262,13 +260,19 @@ onMounted(async () => {
   border-radius: 8px;
 }
 
-.home { padding: 12px; }
+@media (max-width: 640px) {
+  .home {
+    padding: 12px;
+  }
   .product-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
   .product-card {
     padding: 12px;
+  }
+  .product-card img {
+    height: 220px;
   }
 }
 </style>

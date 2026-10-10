@@ -29,7 +29,6 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from '@/utils/axios';
 
-
 import { getImageUrl } from '@/utils/image';
 
 const route = useRoute();
@@ -43,8 +42,8 @@ const fetchSearch = async () => {
   loading.value = true;
   try {
     const res = await axios.get('/api/products/products', {
-   params: { keyword: keyword.value }
-   });
+      params: { keyword: keyword.value }
+    });
     products.value = res.data.products;
   } catch (error) {
     console.error(error);
@@ -61,14 +60,51 @@ onMounted(fetchSearch);
 </script>
 
 <style scoped>
-.search-page { padding: 20px; }
-.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-.product-card { border: 1px solid #eee; padding: 15px; border-radius: 8px; cursor: pointer; }
+.search-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.product-card {
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.product-card h3 {
+  margin-top: 10px;
+}
 .product-card img {
   width: 100%;
   height: 200px;
   object-fit: cover;
   border-radius: 6px;
 }
-.empty { text-align: center; padding: 40px; color: #888; }
+.empty {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
+
+@media (max-width: 640px) {
+  .search-page {
+    padding: 12px;
+  }
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .product-card {
+    padding: 12px;
+  }
+  .product-card img {
+    height: 220px;
+  }
+}
 </style>
