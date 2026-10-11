@@ -154,7 +154,7 @@ nav button:not(.hamburger) {
 }
 
 /* ─────────── NAV (mobile) ─────────── */
-@media (max-width: 1280px) {
+@media (max-width: 1024px) {
   nav {
     flex-direction: column;
     align-items: stretch;
