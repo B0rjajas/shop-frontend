@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /operational/
+Disallow: /login
+Disallow: /register
+Disallow: /cart
+Disallow: /orders
+Disallow: /evaluation/
+Disallow: /success
+Disallow: /cancel
+
+Sitemap: https://vitasport.pro/sitemap.xml
