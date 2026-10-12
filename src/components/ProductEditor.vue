@@ -75,6 +75,8 @@
 import { ref, reactive, onMounted, shallowRef, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProductStore } from '../stores/product';
+import { useUserStore } from '../stores/user';   // ← añade
+
 import { ElMessage } from 'element-plus';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { IDomEditor } from '@wangeditor/editor';
@@ -106,15 +108,25 @@ const editorRef = shallowRef<IDomEditor | null>(null);
 const toolbarConfig = {
   excludeKeys: ['fullScreen', 'video'],
 };
+const userStore = useUserStore();  // ← añade justo antes de editorConfig
+
 const editorConfig = {
   placeholder: 'Escribe el detalle del producto...',
   MENU_CONF: {
     uploadImage: {
-      // Configuración para subir imágenes desde el editor
       server: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/upload`,
       fieldName: 'file',
-    }
-  }
+      // WangEditor 5.x: así añadimos el Bearer token a cada upload
+      headers: {
+        Authorization: `Bearer ${userStore.token}`,
+      },
+      // Opcional pero recomendado: límite de 5 MB (igual que multer en backend)
+      maxFileSize: 5 * 1024 * 1024,
+      // Opcional: solo imágenes
+      allowedFileTypes: ['image/*'],
+    },
+  },
+
 };
 
 const handleEditorCreated = (editor: IDomEditor) => {
