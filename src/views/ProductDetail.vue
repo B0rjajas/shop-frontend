@@ -47,7 +47,6 @@ import { useCartStore } from '../stores/cart';
 import { useEvaluationStore } from '../stores/evaluation';
 import { ElMessage } from 'element-plus';
 
-
 import { getImageUrl } from '@/utils/image';
 
 const route = useRoute();
@@ -99,13 +98,196 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.product-detail { max-width: 1000px; margin: 0 auto; padding: 20px; }
-.top { display: flex; gap: 40px; margin-bottom: 40px; }
-.main-image { max-width: 400px; max-height: 400px; object-fit: contain; }
-.info { flex: 1; }
-.btn-add { background: #42b883; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-size: 16px; cursor: pointer; }
-.detail-content { padding: 10px; border: 1px solid #eee; border-radius: 4px; min-height: 200px; }
-.loading { text-align: center; padding: 50px; }
-.evaluation-item { border-bottom: 1px solid #eee; padding: 12px 0; }
-.empty { text-align: center; color: #888; padding: 20px; }
+/* ─────────────────────────────────────── */
+/* Layout base */
+/* ─────────────────────────────────────── */
+.product-detail {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.top {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+.main-image {
+  width: 100%;
+  max-width: 420px;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f8f8f8;
+}
+
+.info {
+  flex: 1;
+  min-width: 0; /* ← TRUCO: permite wrap de texto largo en flex-child */
+}
+
+.info h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.info p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.btn-add {
+  background: #42b883;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.btn-add:hover {
+  background: #359c6e;
+}
+
+/* ─────────────────────────────────────── */
+/* Tabs y contenido */
+/* ─────────────────────────────────────── */
+.tabs {
+  margin-top: 24px;
+}
+
+.detail-content {
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  min-height: 200px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* IMPORTANTE: las imágenes internas del detalle (WangEditor) no deben
+   desbordar. Sin esto, si el usuario sube una foto de 2000px, rompe el móvil. */
+.detail-content :deep(img) {
+  max-width: 100%;
+  height: auto;
+}
+
+.detail-content :deep(table) {
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+
+.detail-content :deep(pre) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+}
+
+.evaluation-item {
+  border-bottom: 1px solid #eee;
+  padding: 12px 0;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+/* ─────────────────────────────────────── */
+/* RESPONSIVE — Tablet (768px) */
+/* ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .product-detail {
+    padding: 16px;
+  }
+
+  .top {
+    flex-direction: column;  /* ← LA CLAVE: apilar verticalmente */
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .info {
+    width: 100%;  /* ← ESTA LÍNEA ES LA QUE FALTABA */
+  }
+
+  .main-image {
+    max-width: 100%;
+    max-height: 340px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .info h1 {
+    font-size: 1.6rem;
+  }
+
+  .info p {
+    font-size: 0.95rem;
+  }
+
+  .btn-add {
+    width: auto;
+    min-width: 220px;
+    display: block;
+    margin: 12px auto 0;
+    padding: 14px 24px;
+    font-size: 1rem;
+  }
+
+  .tabs {
+    margin-top: 16px;
+  }
+
+  .detail-content {
+    padding: 12px;
+    font-size: 0.95rem;
+    min-height: 120px;
+  }
+}
+
+/* ─────────────────────────────────────── */
+/* RESPONSIVE — Móvil pequeño (480px) */
+/* ─────────────────────────────────────── */
+@media (max-width: 480px) {
+  .product-detail {
+    padding: 12px;
+  }
+
+  .main-image {
+    max-height: 280px;
+  }
+
+  .info h1 {
+    font-size: 1.35rem;
+  }
+
+  .info p {
+    font-size: 0.9rem;
+  }
+
+  .detail-content {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .evaluation-item {
+    padding: 10px 0;
+    font-size: 0.9rem;
+  }
+}
 </style>
