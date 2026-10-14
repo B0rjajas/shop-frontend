@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useHead } from '@vueuse/head';
 
 import axios from '@/utils/axios';
 import { useCartStore } from '../stores/cart';

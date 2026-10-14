@@ -1,9 +1,10 @@
 // src/main.ts
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import { createHead } from '@vueuse/head';
 import App from './App.vue';
 import router from './router';
-import { useUserStore } from './stores/user'; // 👈 Importar
+import { useUserStore } from './stores/user';
 
 // Element Plus
 import ElementPlus from 'element-plus';
@@ -21,6 +22,10 @@ use([BarChart, GridComponent, TooltipComponent, TitleComponent, CanvasRenderer])
 
 const pinia = createPinia();
 const app = createApp(App);
+
+// Registrar head (SEO dinámico)
+const head = createHead();
+app.use(head);
 
 app.use(pinia);
 app.use(router);

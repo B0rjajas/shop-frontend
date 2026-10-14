@@ -109,6 +109,48 @@
   "resolved" "https://registry.npmjs.org/@types/web-bluetooth/-/web-bluetooth-0.0.21.tgz"
   "version" "0.0.21"
 
+"@unhead/dom@^1.7.0", "@unhead/dom@1.11.20":
+  "integrity" "sha512-jgfGYdOH+xHJF/j8gudjsYu3oIjFyXhCWcgKaw3vQnT616gSqyqnGQGOItL+BQtQZACKNISwIfx5PuOtztMKLA=="
+  "resolved" "https://registry.npmjs.org/@unhead/dom/-/dom-1.11.20.tgz"
+  "version" "1.11.20"
+  dependencies:
+    "@unhead/schema" "1.11.20"
+    "@unhead/shared" "1.11.20"
+
+"@unhead/schema@^1.7.0", "@unhead/schema@1.11.20":
+  "integrity" "sha512-0zWykKAaJdm+/Y7yi/Yds20PrUK7XabLe9c3IRcjnwYmSWY6z0Cr19VIs3ozCj8P+GhR+/TI2mwtGlueCEYouA=="
+  "resolved" "https://registry.npmjs.org/@unhead/schema/-/schema-1.11.20.tgz"
+  "version" "1.11.20"
+  dependencies:
+    "hookable" "^5.5.3"
+    "zhead" "^2.2.4"
+
+"@unhead/shared@1.11.20":
+  "integrity" "sha512-1MOrBkGgkUXS+sOKz/DBh4U20DNoITlJwpmvSInxEUNhghSNb56S0RnaHRq0iHkhrO/cDgz2zvfdlRpoPLGI3w=="
+  "resolved" "https://registry.npmjs.org/@unhead/shared/-/shared-1.11.20.tgz"
+  "version" "1.11.20"
+  dependencies:
+    "@unhead/schema" "1.11.20"
+    "packrup" "^0.1.2"
+
+"@unhead/ssr@^1.7.0":
+  "integrity" "sha512-j6ehzmdWGAvv0TEZyLE3WBnG1ULnsbKQcLqBDh3fvKS6b3xutcVZB7mjvrVE7ckSZt6WwOtG0ED3NJDS7IjzBA=="
+  "resolved" "https://registry.npmjs.org/@unhead/ssr/-/ssr-1.11.20.tgz"
+  "version" "1.11.20"
+  dependencies:
+    "@unhead/schema" "1.11.20"
+    "@unhead/shared" "1.11.20"
+
+"@unhead/vue@^1.7.0":
+  "integrity" "sha512-sqQaLbwqY9TvLEGeq8Fd7+F2TIuV3nZ5ihVISHjWpAM3y7DwNWRU7NmT9+yYT+2/jw1Vjwdkv5/HvDnvCLrgmg=="
+  "resolved" "https://registry.npmjs.org/@unhead/vue/-/vue-1.11.20.tgz"
+  "version" "1.11.20"
+  dependencies:
+    "@unhead/schema" "1.11.20"
+    "@unhead/shared" "1.11.20"
+    "hookable" "^5.5.3"
+    "unhead" "1.11.20"
+
 "@uppy/companion-client@^2.2.2":
   "integrity" "sha512-5mTp2iq97/mYSisMaBtFRry6PTgZA6SIL7LePteOV5x0/DxKfrZW3DEiQERJmYpHzy7k8johpm2gHnEKto56Og=="
   "resolved" "https://registry.npmjs.org/@uppy/companion-client/-/companion-client-2.2.2.tgz"
@@ -288,6 +330,16 @@
     "@types/web-bluetooth" "^0.0.21"
     "@vueuse/metadata" "14.4.0"
     "@vueuse/shared" "14.4.0"
+
+"@vueuse/head@^2.0.0":
+  "integrity" "sha512-ykdOxTGs95xjD4WXE4na/umxZea2Itl0GWBILas+O4oqS7eXIods38INvk3XkJKjqMdWPcpCyLX/DioLQxU1KA=="
+  "resolved" "https://registry.npmjs.org/@vueuse/head/-/head-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "@unhead/dom" "^1.7.0"
+    "@unhead/schema" "^1.7.0"
+    "@unhead/ssr" "^1.7.0"
+    "@unhead/vue" "^1.7.0"
 
 "@vueuse/metadata@14.4.0":
   "integrity" "sha512-swx/255R6JyHZFJhx845iz5CRWDZdCfvkZOpACWc5+c5WHcG24mv8gUT1WIdFQaHt6dq79rvILd9QnCWiyVm9g=="
@@ -717,6 +769,11 @@
   "resolved" "https://registry.npmjs.org/he/-/he-1.2.0.tgz"
   "version" "1.2.0"
 
+"hookable@^5.5.3":
+  "integrity" "sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ=="
+  "resolved" "https://registry.npmjs.org/hookable/-/hookable-5.5.3.tgz"
+  "version" "5.5.3"
+
 "html-void-elements@^2.0.0":
   "integrity" "sha512-0quDb7s97CfemeJAnW9wC0hw78MtW7NU3hqtCD75g2vFlDLt36llsYD7uB7SUzojLMP24N5IatXf7ylGXiGG9A=="
   "resolved" "https://registry.npmjs.org/html-void-elements/-/html-void-elements-2.0.1.tgz"
@@ -885,6 +942,11 @@
   "resolved" "https://registry.npmjs.org/nostics/-/nostics-1.2.0.tgz"
   "version" "1.2.0"
 
+"packrup@^0.1.2":
+  "integrity" "sha512-ZcKU7zrr5GlonoS9cxxrb5HVswGnyj6jQvwFBa6p5VFw7G71VAHcUKL5wyZSU/ECtPM/9gacWxy2KFQKt1gMNA=="
+  "resolved" "https://registry.npmjs.org/packrup/-/packrup-0.1.2.tgz"
+  "version" "0.1.2"
+
 "path-browserify@^1.0.1":
   "integrity" "sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g=="
   "resolved" "https://registry.npmjs.org/path-browserify/-/path-browserify-1.0.1.tgz"
@@ -1001,6 +1063,16 @@
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz"
   "version" "5.9.3"
 
+"unhead@1.11.20":
+  "integrity" "sha512-3AsNQC0pjwlLqEYHLjtichGWankK8yqmocReITecmpB1H0aOabeESueyy+8X1gyJx4ftZVwo9hqQ4O3fPWffCA=="
+  "resolved" "https://registry.npmjs.org/unhead/-/unhead-1.11.20.tgz"
+  "version" "1.11.20"
+  dependencies:
+    "@unhead/dom" "1.11.20"
+    "@unhead/schema" "1.11.20"
+    "@unhead/shared" "1.11.20"
+    "hookable" "^5.5.3"
+
 "vite@^4.4.5":
   "integrity" "sha512-+v57oAaoYNnO3hIu5Z/tJRZjq5aHM2zDve9YZ8HngVHbhk66RStobhb1sqPMIPEleV6cNKYK4eGrAbE9Ulbl2g=="
   "resolved" "https://registry.npmjs.org/vite/-/vite-4.5.14.tgz"
@@ -1069,6 +1141,11 @@
   "integrity" "sha512-DXukZJxpHA8LuotRwL0pP1+rS6CS7FF2qStDDE1C7DDg2rLud2PXRMuEDYIPhgEezwnlHNL4c+N6MfMTjCGTng=="
   "resolved" "https://registry.npmjs.org/wildcard/-/wildcard-1.1.2.tgz"
   "version" "1.1.2"
+
+"zhead@^2.2.4":
+  "integrity" "sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag=="
+  "resolved" "https://registry.npmjs.org/zhead/-/zhead-2.2.4.tgz"
+  "version" "2.2.4"
 
 "zrender@5.5.0":
   "integrity" "sha512-O3MilSi/9mwoovx77m6ROZM7sXShR/O/JIanvzTwjN3FORfLSr81PsUGd7jlaYOeds9d8tw82oP44+3YucVo+w=="
