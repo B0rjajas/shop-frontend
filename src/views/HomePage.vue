@@ -5,12 +5,18 @@
       <button @click="doSearch">Buscar</button>
     </div>
 
-    <el-carousel v-if="banners.length" height="300px" indicator-position="outside">
+    <el-carousel
+      v-if="banners.length"
+      class="home-carousel"
+      :height="carouselHeight"
+      indicator-position="outside"
+    >
       <el-carousel-item v-for="banner in banners" :key="banner.id">
-        <router-link :to="banner.uri || '#'">
+        <router-link :to="banner.uri || '#'" class="banner-link">
           <img
             :src="getImageUrl(banner.cover)"
             alt="banner"
+            class="banner-img"
           />
           <div class="banner-content">
             <h3>{{ banner.name }}</h3>
@@ -69,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import axios from '@/utils/axios';
@@ -90,6 +96,29 @@ const loading = ref(false);
 const hasMore = ref(true);
 const error = ref('');
 const searchQuery = ref('');
+
+// ─────────────────────────────────────────
+// Altura dinámica del carrusel según pantalla
+// ─────────────────────────────────────────
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024);
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWidth);
+});
+
+const carouselHeight = computed(() => {
+  if (windowWidth.value < 480) return '160px';
+  if (windowWidth.value < 768) return '220px';
+  if (windowWidth.value < 1024) return '280px';
+  return '300px';
+});
 
 const doSearch = () => {
   if (searchQuery.value.trim()) {
@@ -250,14 +279,72 @@ onMounted(async () => {
   color: #888;
 }
 .error { color: red; }
+
+/* ─────────────────────────────────────── */
+/* CARRUSEL — La imagen SIEMPRE llena la caja */
+/* ─────────────────────────────────────── */
+.home-carousel {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+/* El contenedor interno hereda la altura del carrusel */
+.home-carousel :deep(.el-carousel__container) {
+  height: 100%;
+}
+
+/* Cada slide ocupa el 100% del contenedor */
+.home-carousel :deep(.el-carousel__item) {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* El link cubre todo el slide */
+.banner-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* 🔑 LA IMAGEN LLENA EL HUECO SIN DEFORMARSE */
+.banner-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Overlay del texto sobre el banner */
 .banner-content {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
   color: white;
-  background: rgba(0,0,0,0.5);
-  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 10px 16px;
   border-radius: 8px;
+  max-width: 70%;
+}
+
+.banner-content h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.banner-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.95;
 }
 
 @media (max-width: 640px) {
@@ -273,6 +360,23 @@ onMounted(async () => {
   }
   .product-card img {
     height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-content {
+    bottom: 10px;
+    left: 10px;
+    padding: 8px 12px;
+    max-width: 80%;
+  }
+
+  .banner-content h3 {
+    font-size: 0.9rem;
+  }
+
+  .banner-content p {
+    font-size: 0.75rem;
   }
 }
 </style>
