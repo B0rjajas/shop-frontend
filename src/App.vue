@@ -98,7 +98,6 @@ const { isAuthenticated, isAdmin, user } = storeToRefs(userStore);
 
 const menuOpen = ref(false);
 
-// Cierra el menú al cambiar de ruta
 watch(
   () => route.path,
   () => {
@@ -168,18 +167,19 @@ nav {
   text-decoration: none;
 }
 
+/* ✅ Logo a 40px de alto (tamaño correcto) */
 .logo-img {
-  height: 100px;
+  height: 40px;
   width: auto;
   object-fit: contain;
 }
 
 .brand-desktop {
-  display: none; /* Solo visible en desktop */
+  display: none;
 }
 
 .nav-mobile-header {
-  display: none; /* Solo visible en móvil */
+  display: none;
 }
 
 .hamburger {
@@ -232,7 +232,6 @@ nav button:not(.hamburger) {
   font-size: 1rem;
 }
 
-/* Desktop: mostrar logo brand, ocultar mobile header */
 @media (min-width: 1025px) {
   .brand-desktop {
     display: flex;
@@ -313,9 +312,9 @@ nav button:not(.hamburger) {
   }
 }
 
-/* ─────────── FOOTER ─────────── */
+/* ─────────── FOOTER (oscuro) ─────────── */
 .site-footer {
-  background: #f8f9fa;
+  background: #2c3e50;
   color: #ecf0f1;
   padding: 40px 20px 0;
   margin-top: 60px;
@@ -353,11 +352,11 @@ nav button:not(.hamburger) {
   text-decoration: none;
 }
 
+/* ✅ Logo del footer a 50px de alto (antes estaba a 100px) */
 .footer-logo {
-  height: 100px;
+  height: 50px;
   width: auto;
   margin-bottom: 12px;
-  /* Quitado el filter para mantener el logo con su fondo original */
   border-radius: 6px;
 }
 
@@ -390,7 +389,7 @@ nav button:not(.hamburger) {
   }
 
   .footer-logo {
-    height: 100px;
+    height: 40px;
   }
 }
 
