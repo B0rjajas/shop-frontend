@@ -169,7 +169,7 @@ nav {
 
 /* ✅ Logo a 40px de alto (tamaño correcto) */
 .logo-img {
-  height: 40px;
+  height: 100px;
   width: auto;
   object-fit: contain;
 }
@@ -314,7 +314,7 @@ nav button:not(.hamburger) {
 
 /* ─────────── FOOTER (oscuro) ─────────── */
 .site-footer {
-  background: #2c3e50;
+  background: #f8f9fa;
   color: #ecf0f1;
   padding: 40px 20px 0;
   margin-top: 60px;
